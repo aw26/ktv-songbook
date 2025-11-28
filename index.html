@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中文KTV歌曲大全 - 1000首经典歌曲</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Microsoft YaHei', 'PingFang SC', sans-serif; background: linear-gradient(135deg, #C71847 0%, #8B1538 100%); min-height: 100vh; padding: 20px; }
+.container { max-width: 1800px; margin: 0 auto; }
+header { text-align: center; color: white; margin-bottom: 30px; }
+h1 { font-size: 3rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin-bottom: 10px; }
+.subtitle { font-size: 1.3rem; opacity: 0.95; font-weight: 500; }
+.stats-bar { background: rgba(255,255,255,0.2); padding: 12px; border-radius: 10px; margin-top: 15px; backdrop-filter: blur(10px); font-size: 1.1rem; font-weight: 600; }
+.main-nav { background: white; border-radius: 15px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+.view-toggle { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+.view-btn { padding: 15px; font-size: 1.15rem; border: 2px solid #0075C4; background: white; color: #0075C4; border-radius: 12px; cursor: pointer; font-weight: 700; transition: all 0.2s; }
+.view-btn.active { background: #0075C4; color: white; transform: scale(1.03); }
+.view-btn:hover { transform: scale(1.05); opacity: 0.9; }
+.search-box { display: flex; gap: 12px; margin-bottom: 20px; }
+#searchInput { flex: 1; padding: 15px 20px; font-size: 1.15rem; border: 2px solid #e5e7eb; border-radius: 12px; outline: none; font-weight: 500; }
+#searchInput:focus { border-color: #0075C4; box-shadow: 0 0 0 3px rgba(0,117,196,0.1); }
+.filter-section { display: none; }
+.filter-section.active { display: block; }
+.filter-tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; }
+.tab { padding: 10px 18px; background: #f3f4f6; border: 2px solid transparent; border-radius: 25px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: all 0.2s; }
+.tab:hover { background: #e5e7eb; transform: translateY(-1px); }
+.tab.active { background: #0075C4; color: white; border-color: #0075C4; }
+.artist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 20px; max-height: 65vh; overflow-y: auto; }
+.artist-card { background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%); border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.3s; border: 2px solid transparent; text-align: center; }
+.artist-card:hover { background: linear-gradient(135deg, #f3f4f6 0%, #f9fafb 100%); transform: translateY(-3px); border-color: #0075C4; box-shadow: 0 8px 20px rgba(0,117,196,0.15); }
+.artist-name { font-weight: 700; color: #374151; margin-bottom: 8px; font-size: 1.15rem; }
+.artist-english { color: #9ca3af; font-size: 0.9rem; margin-bottom: 10px; }
+.artist-count { color: #0075C4; font-size: 1.1rem; font-weight: 700; }
+.songs-section { background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); min-height: 500px; }
+.category-header { color: #0075C4; font-size: 1.8rem; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 3px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
+.back-btn { padding: 10px 20px; background: #f3f4f6; border: 2px solid #e5e7eb; border-radius: 10px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: all 0.2s; }
+.back-btn:hover { background: #e5e7eb; transform: scale(1.05); }
+.songs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 18px; }
+.song-card { background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%); border-radius: 12px; padding: 18px; transition: all 0.3s; border: 2px solid transparent; }
+.song-card:hover { background: linear-gradient(135deg, #f3f4f6 0%, #f9fafb 100%); transform: translateY(-2px); border-color: #0075C4; box-shadow: 0 6px 15px rgba(0,117,196,0.12); }
+.song-title { font-weight: 700; color: #374151; margin-bottom: 6px; font-size: 1.15rem; }
+.song-artist { color: #6b7280; font-size: 0.95rem; margin-bottom: 10px; font-weight: 500; }
+.song-pinyin { color: #9ca3af; font-size: 0.88rem; font-style: italic; margin-bottom: 12px; }
+.btn-link { display: inline-flex; padding: 12px 20px; font-size: 0.95rem; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; transition: all 0.2s; text-decoration: none; align-items: center; justify-content: center; gap: 6px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; width: 100%; }
+.btn-link:hover { background: linear-gradient(135deg, #059669 0%, #047857 100%); transform: scale(1.02); }
+.no-results { text-align: center; color: #6b7280; padding: 60px 20px; font-size: 1.3rem; font-weight: 600; }
+.stats { color: #4b5563; font-size: 1rem; margin-top: 12px; padding: 12px; background: #f9fafb; border-radius: 8px; text-align: center; }
+footer { text-align: center; color: white; padding: 30px 20px; font-size: 0.95rem; margin-top: 30px; opacity: 0.9; }
+@media (max-width: 768px) {
+    h1 { font-size: 2.2rem; }
+    .view-toggle { grid-template-columns: 1fr; }
+    .songs-grid, .artist-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>🎤 中文KTV歌曲大全</h1>
+<p class="subtitle">Chinese KTV Complete Catalog • 从1950年代到现代的1000首经典歌曲</p>
+<div class="stats-bar" id="statsBar">正在加载... Loading...</div>
+</header>
+
+<div class="main-nav">
+<div class="view-toggle">
+<button class="view-btn active" onclick="switchView('category')">📅 按年代/类型<br>By Era/Type</button>
+<button class="view-btn" onclick="switchView('artist')">🎵 按歌手<br>By Artist</button>
+<button class="view-btn" onclick="switchView('all')">📚 全部歌曲<br>All Songs</button>
+</div>
+
+<div class="search-box">
+<input type="text" id="searchInput" placeholder="🔍 搜索歌曲、歌手或拼音 Search song, artist or pinyin..." oninput="handleSearch()">
+</div>
+
+<div id="categoryFilters" class="filter-section active">
+<div class="filter-tabs" id="categoryTabs"></div>
+</div>
+
+<div id="artistFilters" class="filter-section">
+<div id="artistGrid" class="artist-grid"></div>
+</div>
+
+<div class="stats">
+💡 点击歌曲直接打开YouTube卡拉OK版本 • Click song to open YouTube karaoke version<br>
+📱 支持手机投屏到电视 • Supports casting to TV via Chromecast/AirPlay
+</div>
+</div>
+
+<div class="songs-section">
+<div class="category-header">
+<span id="categoryTitle">正在加载歌曲... Loading songs...</span>
+<button class="back-btn" id="backBtn" style="display: none;" onclick="goBack()">← 返回 Back</button>
+</div>
+<div class="songs-grid" id="songsGrid"></div>
+<div class="no-results" id="noResults" style="display: none;">
+😔 没有找到歌曲 No songs found!
+</div>
+</div>
+
+<footer>
+Welcome to Angela's fun tools - built to brighten your day ☀️!<br>
+Questions, ideas, feedback? Please share with me at menghuawu@gmail.com
+</footer>
+
+</div>
+
+<script>
+const SONGS_DATA = `
+我的祖国|郭兰英|Guo Lanying|Wo De Zu Guo|50s,revolutionary,ballad
+歌唱祖国|合唱|Chorus|Ge Chang Zu Guo|50s,revolutionary,upbeat
+东方红|合唱|Chorus|Dong Fang Hong|50s,revolutionary,upbeat
+社会主义好|合唱|Chorus|She Hui Zhu Yi Hao|50s,revolutionary,upbeat
+我们走在大路上|合唱|Chorus|Wo Men Zou Zai Da Lu Shang|60s,revolutionary,upbeat
+草原上升起不落的太阳|吴雁泽|Wu Yanze|Cao Yuan Shang Sheng Qi Bu Luo De Tai Yang|50s,folk,ballad
+九九艳阳天|合唱|Chorus|Jiu Jiu Yan Yang Tian|50s,folk,upbeat
+敖包相会|王洛宾|Wang Luobin|Ao Bao Xiang Hui|50s,folk,ballad
+蝴蝶泉边|黄虹|Huang Hong|Hu Die Quan Bian|60s,folk,ballad
+婚誓|黄虹|Huang Hong|Hun Shi|60s,folk,ballad
+花儿为什么这样红|合唱|Chorus|Hua Er Wei Shen Me Zhe Yang Hong|60s,folk,upbeat
+我爱祖国的蓝天|合唱|Chorus|Wo Ai Zu Guo De Lan Tian|60s,revolutionary,upbeat
+洪湖水浪打浪|合唱|Chorus|Hong Hu Shui Lang Da Lang|60s,revolutionary,upbeat
+英雄赞歌|合唱|Chorus|Ying Xiong Zan Ge|60s,revolutionary,upbeat
+中国人民志愿军战歌|合唱|Chorus|Zhong Guo Ren Min Zhi Yuan Jun Zhan Ge|50s,revolutionary,upbeat
+我是一个兵|合唱|Chorus|Wo Shi Yi Ge Bing|50s,revolutionary,upbeat
+北京的金山上|才旦卓玛|Caidan Zhuoma|Bei Jing De Jin Shan Shang|60s,folk,upbeat
+翻身农奴把歌唱|才旦卓玛|Caidan Zhuoma|Fan Shen Nong Nu Ba Ge Chang|60s,revolutionary,upbeat
+大海航行靠舵手|合唱|Chorus|Da Hai Hang Xing Kao Duo Shou|60s,revolutionary,upbeat
+在那桃花盛开的地方|蒋大为|Jiang Dawei|Zai Na Tao Hua Sheng Kai De Di Fang|70s,folk,ballad
+敢问路在何方|蒋大为|Jiang Dawei|Gan Wen Lu Zai He Fang|80s,upbeat
+牡丹之歌|蒋大为|Jiang Dawei|Mu Dan Zhi Ge|80s,ballad
+北国之春|蒋大为|Jiang Dawei|Bei Guo Zhi Chun|80s,ballad
+最美的歌儿唱给妈妈|蒋大为|Jiang Dawei|Zui Mei De Ge Er Chang Gei Ma Ma|80s,ballad
+浏阳河|李谷一|Li Guyi|Liu Yang He|70s,folk,ballad
+难忘今宵|李谷一|Li Guyi|Nan Wang Jin Xiao|80s,ballad
+乡恋|李谷一|Li Guyi|Xiang Lian|80s,ballad
+知音|李谷一|Li Guyi|Zhi Yin|80s,ballad
+绒花|李谷一|Li Guyi|Rong Hua|80s,ballad
+边疆的泉水清又纯|李谷一|Li Guyi|Bian Jiang De Quan Shui Qing You Chun|80s,ballad
+小路|李谷一|Li Guyi|Xiao Lu|70s,ballad
+我爱你中国|叶佩英|Ye Peiying|Wo Ai Ni Zhong Guo|80s,ballad
+在那遥远的地方|王洛宾|Wang Luobin|Zai Na Yao Yuan De Di Fang|50s,folk,ballad
+达坂城的姑娘|王洛宾|Wang Luobin|Da Ban Cheng De Gu Niang|50s,folk,upbeat
+半个月亮爬上来|王洛宾|Wang Luobin|Ban Ge Yue Liang Pa Shang Lai|50s,folk,ballad
+在银色的月光下|王洛宾|Wang Luobin|Zai Yin Se De Yue Guang Xia|50s,folk,ballad
+康定情歌|王洛宾|Wang Luobin|Kang Ding Qing Ge|50s,folk,ballad
+掀起你的盖头来|王洛宾|Wang Luobin|Xian Qi Ni De Gai Tou Lai|50s,folk,upbeat
+阿拉木汗|王洛宾|Wang Luobin|A La Mu Han|50s,folk,upbeat
+可爱的一朵玫瑰花|王洛宾|Wang Luobin|Ke Ai De Yi Duo Mei Gui Hua|50s,folk,ballad
+军港之夜|苏小明|Su Xiaoming|Jun Gang Zhi Ye|80s,ballad
+海风啊海风|苏小明|Su Xiaoming|Hai Feng A Hai Feng|80s,ballad
+妈妈的吻|朱晓琳|Zhu Xiaolin|Ma Ma De Wen|80s,upbeat
+花仙子|朱晓琳|Zhu Xiaolin|Hua Xian Zi|80s,upbeat
+那一年我们十七岁|朱晓琳|Zhu Xiaolin|Na Yi Nian Wo Men Shi Qi Sui|80s,ballad
+小螺号|程琳|Cheng Lin|Xiao Luo Hao|80s,upbeat
+童年的小摇车|程琳|Cheng Lin|Tong Nian De Xiao Yao Che|80s,upbeat
+信天游|程琳|Cheng Lin|Xin Tian You|80s,ballad
+熊猫咪咪|程琳|Cheng Lin|Xiong Mao Mi Mi|80s,upbeat
+黄土高坡|范琳琳|Fan Linlin|Huang Tu Gao Po|80s,upbeat
+跟着感觉走|苏芮|Su Rui|Gen Zhe Gan Jue Zou|80s,upbeat
+酒干倘卖无|苏芮|Su Rui|Jiu Gan Tang Mai Wu|80s,ballad
+是否|苏芮|Su Rui|Shi Fou|80s,ballad
+一样的月光|苏芮|Su Rui|Yi Yang De Yue Guang|80s,ballad
+牵手|苏芮|Su Rui|Qian Shou|80s,ballad
+亲爱的小孩|苏芮|Su Rui|Qin Ai De Xiao Hai|80s,ballad
+冬天里的一把火|费翔|Fei Xiang|Dong Tian Li De Yi Ba Huo|80s,upbeat
+故乡的云|费翔|Fei Xiang|Gu Xiang De Yun|80s,ballad
+思念|毛阿敏|Mao Amin|Si Nian|80s,ballad
+烛光里的妈妈|毛阿敏|Mao Amin|Zhu Guang Li De Ma Ma|80s,ballad
+渴望|毛阿敏|Mao Amin|Ke Wang|80s,ballad
+绿叶对根的情意|毛阿敏|Mao Amin|Lü Ye Dui Gen De Qing Yi|80s,ballad
+篱笆墙的影子|毛阿敏|Mao Amin|Li Ba Qiang De Ying Zi|80s,ballad
+同一首歌|毛阿敏|Mao Amin|Tong Yi Shou Ge|80s,ballad
+女驸马|毛阿敏|Mao Amin|Nü Fu Ma|80s,upbeat
+历史的天空|毛阿敏|Mao Amin|Li Shi De Tian Kong|80s,ballad
+爱的奉献|韦唯|Wei Wei|Ai De Feng Xian|80s,ballad
+亚洲雄风|韦唯刘欢|Wei Wei Liu Huan|Ya Zhou Xiong Feng|80s,upbeat
+爱的箴言|韦唯|Wei Wei|Ai De Zhen Yan|80s,ballad
+少年壮志不言愁|刘欢|Liu Huan|Shao Nian Zhuang Zhi Bu Yan Chou|80s,ballad
+好汉歌|刘欢|Liu Huan|Hao Han Ge|90s,upbeat
+从头再来|刘欢|Liu Huan|Cong Tou Zai Lai|90s,upbeat
+弯弯的月亮|刘欢|Liu Huan|Wan Wan De Yue Liang|90s,ballad
+你是这样的人|刘欢|Liu Huan|Ni Shi Zhe Yang De Ren|90s,ballad
+千万次的问|刘欢|Liu Huan|Qian Wan Ci De Wen|90s,ballad
+心中的太阳|刘欢|Liu Huan|Xin Zhong De Tai Yang|90s,upbeat
+路|刘欢|Liu Huan|Lu|90s,ballad
+大海|张雨生|Zhang Yusheng|Da Hai|90s,upbeat
+我的未来不是梦|张雨生|Zhang Yusheng|Wo De Wei Lai Bu Shi Meng|90s,upbeat
+天天想你|张雨生|Zhang Yusheng|Tian Tian Xiang Ni|90s,ballad
+我是一只小小鸟|张雨生|Zhang Yusheng|Wo Shi Yi Zhi Xiao Xiao Niao|90s,upbeat
+还是朋友|张雨生|Zhang Yusheng|Hai Shi Peng You|90s,ballad
+口是心非|张雨生|Zhang Yusheng|Kou Shi Xin Fei|90s,ballad
+水手|郑智化|Zheng Zhihua|Shui Shou|90s,upbeat
+星星点灯|郑智化|Zheng Zhihua|Xing Xing Dian Deng|90s,ballad
+用我一辈子去忘记|郑智化|Zheng Zhihua|Yong Wo Yi Bei Zi Qu Wang Ji|90s,ballad
+中国人|郑智化|Zheng Zhihua|Zhong Guo Ren|90s,upbeat
+年轻时代|郑智化|Zheng Zhihua|Nian Qing Shi Dai|90s,upbeat
+大国民|郑智化|Zheng Zhihua|Da Guo Min|90s,upbeat
+麻将|郑智化|Zheng Zhihua|Ma Jiang|90s,upbeat
+大约在冬季|齐秦|Chyi Chin|Da Yue Zai Dong Ji|90s,ballad
+外面的世界|齐秦|Chyi Chin|Wai Mian De Shi Jie|90s,ballad
+北方的狼|齐秦|Chyi Chin|Bei Fang De Lang|90s,upbeat
+往事随风|齐秦|Chyi Chin|Wang Shi Sui Feng|90s,ballad
+夜夜夜夜|齐秦|Chyi Chin|Ye Ye Ye Ye|90s,ballad
+原来的我|齐秦|Chyi Chin|Yuan Lai De Wo|90s,ballad
+花祭|齐秦|Chyi Chin|Hua Ji|90s,ballad
+不让我的眼泪陪我过夜|齐秦|Chyi Chin|Bu Rang Wo De Yan Lei Pei Wo Guo Ye|90s,ballad
+雾里看花|那英|Na Ying|Wu Li Kan Hua|90s,ballad
+山不转水转|那英|Na Ying|Shan Bu Zhuan Shui Zhuan|90s,upbeat
+征服|那英|Na Ying|Zheng Fu|90s,upbeat
+白天不懂夜的黑|那英|Na Ying|Bai Tian Bu Dong Ye De Hei|90s,ballad
+默|那英|Na Ying|Mo|modern,ballad
+梦醒了|那英|Na Ying|Meng Xing Le|90s,ballad
+一笑而过|那英|Na Ying|Yi Xiao Er Guo|90s,ballad
+好大一棵树|田震|Tian Zhen|Hao Da Yi Ke Shu|90s,ballad
+执着|田震|Tian Zhen|Zhi Zhuo|90s,upbeat
+干杯朋友|田震|Tian Zhen|Gan Bei Peng You|90s,upbeat
+野花|田震|Tian Zhen|Ye Hua|90s,ballad
+铁窗|田震|Tian Zhen|Tie Chuang|90s,ballad
+月牙泉|田震|Tian Zhen|Yue Ya Quan|90s,ballad
+祝你平安|孙悦|Sun Yue|Zhu Ni Ping An|90s,ballad
+快乐老家|孙悦|Sun Yue|Kuai Le Lao Jia|90s,upbeat
+同桌的你|老狼|Lao Lang|Tong Zhuo De Ni|90s,ballad
+睡在我上铺的兄弟|老狼|Lao Lang|Shui Zai Wo Shang Pu De Xiong Di|90s,ballad
+恋恋风尘|老狼|Lao Lang|Lian Lian Feng Chen|90s,ballad
+模范情书|老狼|Lao Lang|Mo Fan Qing Shu|90s,ballad
+虎口脱险|老狼|Lao Lang|Hu Kou Tuo Xian|90s,upbeat
+白桦林|朴树|Pu Shu|Bai Hua Lin|90s,ballad
+那些花儿|朴树|Pu Shu|Na Xie Hua Er|90s,ballad
+平凡之路|朴树|Pu Shu|Ping Fan Zhi Lu|modern,ballad
+生如夏花|朴树|Pu Shu|Sheng Ru Xia Hua|90s,ballad
+新长征路上的摇滚|崔健|Cui Jian|Xin Chang Zheng Lu Shang De Yao Gun|80s,upbeat
+一无所有|崔健|Cui Jian|Yi Wu Suo You|80s,upbeat
+花房姑娘|崔健|Cui Jian|Hua Fang Gu Niang|80s,upbeat
+假行僧|崔健|Cui Jian|Jia Xing Seng|80s,upbeat
+一块红布|崔健|Cui Jian|Yi Kuai Hong Bu|80s,upbeat
+迟到|董文华|Dong Wenhua|Chi Dao|90s,ballad
+十五的月亮|董文华|Dong Wenhua|Shi Wu De Yue Liang|80s,ballad
+春天的故事|董文华|Dong Wenhua|Chun Tian De Gu Shi|90s,upbeat
+长城长|董文华|Dong Wenhua|Chang Cheng Chang|90s,ballad
+血染的风采|董文华|Dong Wenhua|Xue Ran De Feng Cai|80s,ballad
+你是这样的人|宋祖英|Song Zuying|Ni Shi Zhe Yang De Ren|90s,ballad
+好日子|宋祖英|Song Zuying|Hao Ri Zi|90s,upbeat
+爱我中华|宋祖英|Song Zuying|Ai Wo Zhong Hua|90s,upbeat
+辣妹子|宋祖英|Song Zuying|La Mei Zi|90s,upbeat
+小背篓|宋祖英|Song Zuying|Xiao Bei Lou|90s,ballad
+天路|韩红|Han Hong|Tian Lu|2000s,ballad
+天亮了|韩红|Han Hong|Tian Liang Le|2000s,ballad
+家乡|韩红|Han Hong|Jia Xiang|2000s,ballad
+那片海|韩红|Han Hong|Na Pian Hai|2000s,ballad
+来吧|韩红|Han Hong|Lai Ba|2000s,upbeat
+青藏高原|李娜|Li Na|Qing Zang Gao Yuan|90s,ballad
+嫂子颂|李娜|Li Na|Sao Zi Song|90s,ballad
+大中国|高枫|Gao Feng|Da Zhong Guo|90s,upbeat
+精忠报国|屠洪刚|Tu Honggang|Jing Zhong Bao Guo|90s,upbeat
+中国功夫|屠洪刚|Tu Honggang|Zhong Guo Gong Fu|90s,upbeat
+霸王别姬|屠洪刚|Tu Honggang|Ba Wang Bie Ji|90s,upbeat
+你|屠洪刚|Tu Honggang|Ni|90s,ballad
+知心爱人|满文军|Man Wenjun|Zhi Xin Ai Ren|90s,ballad
+懂你|满文军|Man Wenjun|Dong Ni|90s,ballad
+望乡|满文军|Man Wenjun|Wang Xiang|90s,ballad
+一剪梅|费玉清|Fei Yuqing|Yi Jian Mei|80s,ballad
+梦驼铃|费玉清|Fei Yuqing|Meng Tuo Ling|80s,ballad
+千里之外|费玉清|Fei Yuqing|Qian Li Zhi Wai|80s,ballad
+长相思|费玉清|Fei Yuqing|Chang Xiang Si|80s,ballad
+一剪梅|费玉清|Fei Yuqing|Yi Jian Mei|80s,ballad
+我曾用心爱着你|潘美辰|Pan Meichen|Wo Ceng Yong Xin Ai Zhe Ni|90s,ballad
+我想有个家|潘美辰|Pan Meichen|Wo Xiang You Ge Jia|90s,ballad
+无情的雨无情的你|潘美辰|Pan Meichen|Wu Qing De Yu Wu Qing De Ni|90s,ballad
+我是不是你最疼爱的人|潘越云|Pan Yueyun|Wo Shi Bu Shi Ni Zui Teng Ai De Ren|90s,ballad
+谁的眼泪在飞|孟庭苇|Meng Tingwei|Shui De Yan Lei Zai Fei|90s,ballad
+风中有朵雨做的云|孟庭苇|Meng Tingwei|Feng Zhong You Duo Yu Zuo De Yun|90s,ballad
+羞答答的玫瑰静悄悄地开|孟庭苇|Meng Tingwei|Xiu Da Da De Mei Gui Jing Qiao Qiao Di Kai|90s,upbeat
+你看你看月亮的脸|孟庭苇|Meng Tingwei|Ni Kan Ni Kan Yue Liang De Lian|90s,ballad
+冬季到台北来看雨|孟庭苇|Meng Tingwei|Dong Ji Dao Tai Bei Lai Kan Yu|90s,ballad
+美丽的神话|孙楠|Sun Nan|Mei Li De Shen Hua|2000s,ballad
+不见不散|孙楠|Sun Nan|Bu Jian Bu San|90s,ballad
+拯救|孙楠|Sun Nan|Zheng Jiu|90s,ballad
+燃烧|孙楠|Sun Nan|Ran Shao|90s,upbeat
+风往北吹|孙楠|Sun Nan|Feng Wang Bei Chui|90s,upbeat
+月亮代表我的心|邓丽君|Teresa Teng|Yue Liang Dai Biao Wo De Xin|70s,ballad
+甜蜜蜜|邓丽君|Teresa Teng|Tian Mi Mi|70s,upbeat
+我只在乎你|邓丽君|Teresa Teng|Wo Zhi Zai Hu Ni|70s,ballad
+小城故事|邓丽君|Teresa Teng|Xiao Cheng Gu Shi|70s,ballad
+夜来香|邓丽君|Teresa Teng|Ye Lai Xiang|70s,ballad
+路边的野花不要采|邓丽君|Teresa Teng|Lu Bian De Ye Hua Bu Yao Cai|70s,upbeat
+何日君再来|邓丽君|Teresa Teng|He Ri Jun Zai Lai|70s,ballad
+但愿人长久|邓丽君|Teresa Teng|Dan Yuan Ren Chang Jiu|70s,ballad
+在水一方|邓丽君|Teresa Teng|Zai Shui Yi Fang|70s,ballad
+独上西楼|邓丽君|Teresa Teng|Du Shang Xi Lou|70s,ballad
+千言万语|邓丽君|Teresa Teng|Qian Yan Wan Yu|70s,ballad
+你怎么说|邓丽君|Teresa Teng|Ni Zen Me Shuo|70s,upbeat
+南海姑娘|邓丽君|Teresa Teng|Nan Hai Gu Niang|70s,upbeat
+初恋的地方|邓丽君|Teresa Teng|Chu Lian De Di Fang|70s,ballad
+忘记他|邓丽君|Teresa Teng|Wang Ji Ta|70s,ballad
+又见炊烟|邓丽君|Teresa Teng|You Jian Chui Yan|70s,ballad
+2002年的第一场雪|刀郎|Dao Lang|2002 Nian De Di Yi Chang Xue|2000s,ballad
+情人|刀郎|Dao Lang|Qing Ren|2000s,ballad
+冲动的惩罚|刀郎|Dao Lang|Chong Dong De Cheng Fa|2000s,ballad
+披着羊皮的狼|刀郎|Dao Lang|Pi Zhe Yang Pi De Lang|2000s,upbeat
+西海情歌|刀郎|Dao Lang|Xi Hai Qing Ge|2000s,ballad
+爱是你我|刀郎|Dao Lang|Ai Shi Ni Wo|2000s,ballad
+手心里的温柔|刀郎|Dao Lang|Shou Xin Li De Wen Rou|2000s,ballad
+黄玫瑰|刀郎|Dao Lang|Huang Mei Gui|2000s,ballad
+新阿瓦尔古丽|刀郎|Dao Lang|Xin A Wa Er Gu Li|2000s,upbeat
+敖包相会|刀郎|Dao Lang|Ao Bao Xiang Hui|2000s,ballad
+驼铃|刀郎|Dao Lang|Tuo Ling|2000s,ballad
+罗刹海市|刀郎|Dao Lang|Luo Cha Hai Shi|modern,upbeat
+花妖|刀郎|Dao Lang|Hua Yao|modern,upbeat
+颠倒歌|刀郎|Dao Lang|Dian Dao Ge|modern,upbeat
+可爱女人|周杰伦|Jay Chou|Ke Ai Nu Ren|2000s,upbeat
+完美主义|周杰伦|Jay Chou|Wan Mei Zhu Yi|2000s,ballad
+星晴|周杰伦|Jay Chou|Xing Qing|2000s,upbeat
+娘子|周杰伦|Jay Chou|Niang Zi|2000s,upbeat
+斗牛|周杰伦|Jay Chou|Dou Niu|2000s,upbeat
+黑色幽默|周杰伦|Jay Chou|Hei Se You Mo|2000s,ballad
+伊斯坦堡|周杰伦|Jay Chou|Yi Si Tan Bao|2000s,upbeat
+印地安老斑鸠|周杰伦|Jay Chou|Yin Di An Lao Ban Jiu|2000s,upbeat
+龙卷风|周杰伦|Jay Chou|Long Juan Feng|2000s,upbeat
+反方向的钟|周杰伦|Jay Chou|Fan Fang Xiang De Zhong|2000s,ballad
+爱在西元前|周杰伦|Jay Chou|Ai Zai Xi Yuan Qian|2000s,upbeat
+简单爱|周杰伦|Jay Chou|Jian Dan Ai|2000s,upbeat
+忍者|周杰伦|Jay Chou|Ren Zhe|2000s,upbeat
+开不了口|周杰伦|Jay Chou|Kai Bu Liao Kou|2000s,ballad
+上海一九四三|周杰伦|Jay Chou|Shang Hai Yi Jiu Si San|2000s,ballad
+对不起|周杰伦|Jay Chou|Dui Bu Qi|2000s,ballad
+威廉古堡|周杰伦|Jay Chou|Wei Lian Gu Bao|2000s,upbeat
+双截棍|周杰伦|Jay Chou|Shuang Jie Gun|2000s,upbeat
+安静|周杰伦|Jay Chou|An Jing|2000s,ballad
+半兽人|周杰伦|Jay Chou|Ban Shou Ren|2000s,upbeat
+半岛铁盒|周杰伦|Jay Chou|Ban Dao Tie He|2000s,ballad
+暗号|周杰伦|Jay Chou|An Hao|2000s,ballad
+龙拳|周杰伦|Jay Chou|Long Quan|2000s,upbeat
+火车叨位去|周杰伦|Jay Chou|Huo Che Dao Wei Qu|2000s,upbeat
+分裂|周杰伦|Jay Chou|Fen Lie|2000s,upbeat
+爷爷泡的茶|周杰伦|Jay Chou|Ye Ye Pao De Cha|2000s,upbeat
+回到过去|周杰伦|Jay Chou|Hui Dao Guo Qu|2000s,ballad
+米兰的小铁匠|周杰伦|Jay Chou|Mi Lan De Xiao Tie Jiang|2000s,upbeat
+最后的战役|周杰伦|Jay Chou|Zui Hou De Zhan Yi|2000s,upbeat
+以父之名|周杰伦|Jay Chou|Yi Fu Zhi Ming|2000s,ballad
+懦夫|周杰伦|Jay Chou|Nuo Fu|2000s,ballad
+晴天|周杰伦|Jay Chou|Qing Tian|2000s,ballad
+三年二班|周杰伦|Jay Chou|San Nian Er Ban|2000s,upbeat
+东风破|周杰伦|Jay Chou|Dong Feng Po|2000s,ballad
+你听得到|周杰伦|Jay Chou|Ni Ting De Dao|2000s,ballad
+同一种调调|周杰伦|Jay Chou|Tong Yi Zhong Diao Diao|2000s,upbeat
+她的睫毛|周杰伦|Jay Chou|Ta De Jie Mao|2000s,ballad
+爱情悬崖|周杰伦|Jay Chou|Ai Qing Xuan Ya|2000s,ballad
+梯田|周杰伦|Jay Chou|Ti Tian|2000s,ballad
+双刀|周杰伦|Jay Chou|Shuang Dao|2000s,upbeat
+断了的弦|周杰伦|Jay Chou|Duan Le De Xian|2000s,ballad
+轨迹|周杰伦|Jay Chou|Gui Ji|2000s,ballad
+我的地盘|周杰伦|Jay Chou|Wo De Di Pan|2000s,upbeat
+七里香|周杰伦|Jay Chou|Qi Li Xiang|2000s,upbeat
+借口|周杰伦|Jay Chou|Jie Kou|2000s,ballad
+搁浅|周杰伦|Jay Chou|Ge Qian|2000s,ballad
+乱舞春秋|周杰伦|Jay Chou|Luan Wu Chun Qiu|2000s,upbeat
+困兽之斗|周杰伦|Jay Chou|Kun Shou Zhi Dou|2000s,upbeat
+园游会|周杰伦|Jay Chou|Yuan You Hui|2000s,upbeat
+止战之殇|周杰伦|Jay Chou|Zhi Zhan Zhi Shang|2000s,ballad
+外婆|周杰伦|Jay Chou|Wai Po|2000s,ballad
+将军|周杰伦|Jay Chou|Jiang Jun|2000s,upbeat
+夜曲|周杰伦|Jay Chou|Ye Qu|2000s,ballad
+蓝色风暴|周杰伦|Jay Chou|Lan Se Feng Bao|2000s,upbeat
+发如雪|周杰伦|Jay Chou|Fa Ru Xue|2000s,ballad
+黑色毛衣|周杰伦|Jay Chou|Hei Se Mao Yi|2000s,ballad
+四面楚歌|周杰伦|Jay Chou|Si Mian Chu Ge|2000s,upbeat
+枫|周杰伦|Jay Chou|Feng|2000s,ballad
+浪漫手机|周杰伦|Jay Chou|Lang Man Shou Ji|2000s,upbeat
+逆鳞|周杰伦|Jay Chou|Ni Lin|2000s,upbeat
+麦芽糖|周杰伦|Jay Chou|Mai Ya Tang|2000s,ballad
+飘移|周杰伦|Jay Chou|Piao Yi|2000s,upbeat
+一路向北|周杰伦|Jay Chou|Yi Lu Xiang Bei|2000s,upbeat
+听妈妈的话|周杰伦|Jay Chou|Ting Ma Ma De Hua|2000s,upbeat
+千里之外|周杰伦|Jay Chou|Qian Li Zhi Wai|2000s,ballad
+本草纲目|周杰伦|Jay Chou|Ben Cao Gang Mu|2000s,upbeat
+退后|周杰伦|Jay Chou|Tui Hou|2000s,ballad
+红模仿|周杰伦|Jay Chou|Hong Mo Fang|2000s,upbeat
+心雨|周杰伦|Jay Chou|Xin Yu|2000s,ballad
+白色风车|周杰伦|Jay Chou|Bai Se Feng Che|2000s,upbeat
+迷迭香|周杰伦|Jay Chou|Mi Die Xiang|2000s,ballad
+菊花台|周杰伦|Jay Chou|Ju Hua Tai|2000s,ballad
+夜的第七章|周杰伦|Jay Chou|Ye De Di Qi Zhang|2000s,upbeat
+彩虹|周杰伦|Jay Chou|Cai Hong|2000s,ballad
+青花瓷|周杰伦|Jay Chou|Qing Hua Ci|2000s,ballad
+阳光宅男|周杰伦|Jay Chou|Yang Guang Zhai Nan|2000s,upbeat
+蒲公英的约定|周杰伦|Jay Chou|Pu Gong Ying De Yue Ding|2000s,ballad
+无双|周杰伦|Jay Chou|Wu Shuang|2000s,upbeat
+我不配|周杰伦|Jay Chou|Wo Bu Pei|2000s,ballad
+扯|周杰伦|Jay Chou|Che|2000s,upbeat
+甜甜的|周杰伦|Jay Chou|Tian Tian De|2000s,upbeat
+牛仔很忙|周杰伦|Jay Chou|Niu Zai Hen Mang|2000s,upbeat
+最长的电影|周杰伦|Jay Chou|Zui Chang De Dian Ying|2000s,ballad
+稻香|周杰伦|Jay Chou|Dao Xiang|2000s,upbeat
+兰亭序|周杰伦|Jay Chou|Lan Ting Xu|2000s,ballad
+流浪诗人|周杰伦|Jay Chou|Liu Lang Shi Ren|2000s,ballad
+说好的幸福呢|周杰伦|Jay Chou|Shuo Hao De Xing Fu Ne|2000s,ballad
+龙战骑士|周杰伦|Jay Chou|Long Zhan Qi Shi|2000s,upbeat
+烟花易冷|周杰伦|Jay Chou|Yan Hua Yi Leng|2000s,ballad
+免费教学录影带|周杰伦|Jay Chou|Mian Fei Jiao Xue Lu Ying Dai|2000s,upbeat
+好久不见|周杰伦|Jay Chou|Hao Jiu Bu Jian|2000s,ballad
+雨下一整晚|周杰伦|Jay Chou|Yu Xia Yi Zheng Wan|2000s,ballad
+嘻哈空姐|周杰伦|Jay Chou|Xi Ha Kong Jie|2000s,upbeat
+我落泪情绪零碎|周杰伦|Jay Chou|Wo Luo Lei Qing Xu Ling Sui|2000s,ballad
+爱的飞行日记|周杰伦|Jay Chou|Ai De Fei Xing Ri Ji|2000s,ballad
+超人不会飞|周杰伦|Jay Chou|Chao Ren Bu Hui Fei|2000s,ballad
+跨时代|周杰伦|Jay Chou|Kua Shi Dai|2000s,upbeat
+不能说的秘密|周杰伦|Jay Chou|Bu Neng Shuo De Mi Mi|2000s,ballad
+手写的从前|周杰伦|Jay Chou|Shou Xie De Cong Qian|modern,ballad
+算什么男人|周杰伦|Jay Chou|Suan Shen Me Nan Ren|modern,ballad
+Mojito|周杰伦|Jay Chou|Mojito|modern,upbeat
+说好不哭|周杰伦|Jay Chou|Shuo Hao Bu Ku|modern,ballad
+告白气球|周杰伦|Jay Chou|Gao Bai Qi Qiu|modern,upbeat
+最伟大的作品|周杰伦|Jay Chou|Zui Wei Da De Zuo Pin|modern,upbeat
+十年|陈奕迅|Eason Chan|Shi Nian|2000s,ballad
+K歌之王|陈奕迅|Eason Chan|K Ge Zhi Wang|2000s,ballad
+浮夸|陈奕迅|Eason Chan|Fu Kua|2000s,upbeat
+好久不见|陈奕迅|Eason Chan|Hao Jiu Bu Jian|2000s,ballad
+淘汰|陈奕迅|Eason Chan|Tao Tai|2000s,ballad
+爱情转移|陈奕迅|Eason Chan|Ai Qing Zhuan Yi|2000s,ballad
+红玫瑰|陈奕迅|Eason Chan|Hong Mei Gui|2000s,ballad
+白玫瑰|陈奕迅|Eason Chan|Bai Mei Gui|2000s,ballad
+孤勇者|陈奕迅|Eason Chan|Gu Yong Zhe|modern,upbeat
+明年今日|陈奕迅|Eason Chan|Ming Nian Jin Ri|2000s,ballad
+最佳损友|陈奕迅|Eason Chan|Zui Jia Sun You|2000s,upbeat
+人来人往|陈奕迅|Eason Chan|Ren Lai Ren Wang|2000s,ballad
+富士山下|陈奕迅|Eason Chan|Fu Shi Shan Xia|2000s,ballad
+不要说话|陈奕迅|Eason Chan|Bu Yao Shuo Hua|2000s,ballad
+单车|陈奕迅|Eason Chan|Dan Che|2000s,ballad
+江南|林俊杰|JJ Lin|Jiang Nan|2000s,ballad
+她说|林俊杰|JJ Lin|Ta Shuo|modern,ballad
+曹操|林俊杰|JJ Lin|Cao Cao|2000s,upbeat
+可惜没如果|林俊杰|JJ Lin|Ke Xi Mei Ru Guo|modern,ballad
+修炼爱情|林俊杰|JJ Lin|Xiu Lian Ai Qing|modern,ballad
+背对背拥抱|林俊杰|JJ Lin|Bei Dui Bei Yong Bao|2000s,ballad
+小酒窝|林俊杰|JJ Lin|Xiao Jiu Wo|2000s,upbeat
+一千年以后|林俊杰|JJ Lin|Yi Qian Nian Yi Hou|2000s,ballad
+醉赤壁|林俊杰|JJ Lin|Zui Chi Bi|2000s,upbeat
+不为谁而作的歌|林俊杰|JJ Lin|Bu Wei Shui Er Zuo De Ge|modern,ballad
+美人鱼|林俊杰|JJ Lin|Mei Ren Yu|2000s,ballad
+心墙|林俊杰|JJ Lin|Xin Qiang|2000s,ballad
+倔强|五月天|Mayday|Jue Jiang|2000s,upbeat
+突然好想你|五月天|Mayday|Tu Ran Hao Xiang Ni|2000s,ballad
+知足|五月天|Mayday|Zhi Zu|2000s,ballad
+温柔|五月天|Mayday|Wen Rou|2000s,ballad
+盛夏光年|五月天|Mayday|Sheng Xia Guang Nian|2000s,upbeat
+离开地球表面|五月天|Mayday|Li Kai Di Qiu Biao Mian|2000s,upbeat
+志明与春娇|五月天|Mayday|Zhi Ming Yu Chun Jiao|2000s,upbeat
+星空|五月天|Mayday|Xing Kong|2000s,ballad
+听海|张惠妹|A-Mei|Ting Hai|90s,ballad
+我可以抱你吗|张惠妹|A-Mei|Wo Ke Yi Bao Ni Ma|2000s,ballad
+记得|张惠妹|A-Mei|Ji De|2000s,ballad
+剪爱|张惠妹|A-Mei|Jian Ai|2000s,ballad
+天黑黑|孙燕姿|Stefanie Sun|Tian Hei Hei|2000s,ballad
+遇见|孙燕姿|Stefanie Sun|Yu Jian|2000s,ballad
+我怀念的|孙燕姿|Stefanie Sun|Wo Huai Nian De|2000s,ballad
+绿光|孙燕姿|Stefanie Sun|Lu Guang|2000s,upbeat
+逆光|孙燕姿|Stefanie Sun|Ni Guang|2000s,upbeat
+开始懂了|孙燕姿|Stefanie Sun|Kai Shi Dong Le|2000s,ballad
+我不爱|孙燕姿|Stefanie Sun|Wo Bu Ai|modern,ballad
+来自天堂的魔鬼|邓紫棋|G.E.M.|Lai Zi Tian Tang De Mo Gui|modern,upbeat
+光年之外|邓紫棋|G.E.M.|Guang Nian Zhi Wai|modern,ballad
+泡沫|邓紫棋|G.E.M.|Pao Mo|modern,ballad
+句号|邓紫棋|G.E.M.|Ju Hao|modern,upbeat
+喜欢你|邓紫棋|G.E.M.|Xi Huan Ni|modern,upbeat
+画|邓紫棋|G.E.M.|Hua|modern,ballad
+朋友|周华健|Wakin Chau|Peng You|90s,upbeat
+花心|周华健|Wakin Chau|Hua Xin|90s,ballad
+有没有一首歌会让你想起我|周华健|Wakin Chau|You Mei You Yi Shou Ge Hui Rang Ni Xiang Qi Wo|90s,ballad
+忘忧草|周华健|Wakin Chau|Wang You Cao|90s,ballad
+刀剑如梦|周华健|Wakin Chau|Dao Jian Ru Meng|90s,upbeat
+对面的女孩看过来|任贤齐|Richie Ren|Dui Mian De Nu Hai Kan Guo Lai|90s,upbeat
+心太软|任贤齐|Richie Ren|Xin Tai Ruan|90s,ballad
+伤心太平洋|任贤齐|Richie Ren|Shang Xin Tai Ping Yang|90s,ballad
+天涯|任贤齐|Richie Ren|Tian Ya|90s,upbeat
+童话|光良|Michael Wong|Tong Hua|2000s,ballad
+第一次|光良|Michael Wong|Di Yi Ci|2000s,ballad
+吻别|张学友|Jacky Cheung|Wen Bie|90s,ballad
+一路上有你|张学友|Jacky Cheung|Yi Lu Shang You Ni|90s,ballad
+祝福|张学友|Jacky Cheung|Zhu Fu|90s,ballad
+心如刀割|张学友|Jacky Cheung|Xin Ru Dao Ge|90s,ballad
+情网|张学友|Jacky Cheung|Qing Wang|90s,ballad
+倩女幽魂|张国荣|Leslie Cheung|Qian Nu You Hun|80s,upbeat
+当年情|张国荣|Leslie Cheung|Dang Nian Qing|80s,ballad
+Monica|张国荣|Leslie Cheung|Monica|80s,upbeat
+风再起时|张国荣|Leslie Cheung|Feng Zai Qi Shi|90s,ballad
+追|张国荣|Leslie Cheung|Zhui|80s,upbeat
+日不落|蔡依林|Jolin Tsai|Ri Bu Luo|2000s,upbeat
+看我72变|蔡依林|Jolin Tsai|Kan Wo Qi Shi Er Bian|2000s,upbeat
+舞娘|蔡依林|Jolin Tsai|Wu Niang|2000s,upbeat
+野蛮游戏|蔡依林|Jolin Tsai|Ye Man You Xi|2000s,upbeat
+爱很简单|陶喆|David Tao|Ai Hen Jian Dan|2000s,ballad
+寂寞的季节|陶喆|David Tao|Ji Mo De Ji Jie|90s,ballad
+就是爱你|陶喆|David Tao|Jiu Shi Ai Ni|2000s,upbeat
+普通朋友|陶喆|David Tao|Pu Tong Peng You|2000s,ballad
+唯一|王力宏|Leehom Wang|Wei Yi|2000s,ballad
+大城小爱|王力宏|Leehom Wang|Da Cheng Xiao Ai|2000s,upbeat
+Forever Love|王力宏|Leehom Wang|Forever Love|2000s,ballad
+依然爱你|王力宏|Leehom Wang|Yi Ran Ai Ni|2000s,ballad
+演员|薛之谦|Joker Xue|Yan Yuan|modern,ballad
+丑八怪|薛之谦|Joker Xue|Chou Ba Guai|modern,upbeat
+认真的雪|薛之谦|Joker Xue|Ren Zhen De Xue|modern,ballad
+刚刚好|薛之谦|Joker Xue|Gang Gang Hao|modern,ballad
+成都|赵雷|Zhao Lei|Cheng Du|modern,ballad
+南山南|马頔|Ma Di|Nan Shan Nan|modern,ballad
+Super Star|S.H.E|S.H.E|Super Star|2000s,upbeat
+不想长大|S.H.E|S.H.E|Bu Xiang Zhang Da|2000s,upbeat
+中国话|S.H.E|S.H.E|Zhong Guo Hua|2000s,upbeat
+波斯猫|S.H.E|S.H.E|Bo Si Mao|2000s,upbeat
+红豆|王菲|Faye Wong|Hong Dou|90s,ballad
+匆匆那年|王菲|Faye Wong|Cong Cong Na Nian|modern,ballad
+传奇|王菲|Faye Wong|Chuan Qi|2000s,ballad
+我愿意|王菲|Faye Wong|Wo Yuan Yi|90s,ballad
+容易受伤的女人|王菲|Faye Wong|Rong Yi Shou Shang De Nu Ren|90s,ballad
+执迷不悔|王菲|Faye Wong|Zhi Mi Bu Hui|90s,ballad
+勇气|梁静茹|Fish Leong|Yong Qi|2000s,ballad
+分手快乐|梁静茹|Fish Leong|Fen Shou Kuai Le|2000s,upbeat
+宁夏|梁静茹|Fish Leong|Ning Xia|2000s,ballad
+可惜不是你|梁静茹|Fish Leong|Ke Xi Bu Shi Ni|2000s,ballad
+暖暖|梁静茹|Fish Leong|Nuan Nuan|2000s,ballad
+冰雨|刘德华|Andy Lau|Bing Yu|90s,ballad
+忘情水|刘德华|Andy Lau|Wang Qing Shui|90s,ballad
+谢谢你的爱|刘德华|Andy Lau|Xie Xie Ni De Ai|90s,ballad
+来生缘|刘德华|Andy Lau|Lai Sheng Yuan|90s,ballad
+王妃|萧敬腾|Jam Hsiao|Wang Fei|2000s,upbeat
+新不了情|萧敬腾|Jam Hsiao|Xin Bu Liao Qing|2000s,ballad
+小情歌|苏打绿|Sodagreen|Xiao Qing Ge|2000s,upbeat
+无与伦比的美丽|苏打绿|Sodagreen|Wu Yu Lun Bi De Mei Li|2000s,ballad
+爱的代价|张艾嘉|Zhang Aijia|Ai De Dai Jia|80s,ballad
+爱如潮水|张信哲|Jeff Chang|Ai Ru Chao Shui|90s,ballad
+白月光|张信哲|Jeff Chang|Bai Yue Guang|2000s,ballad
+过火|张信哲|Jeff Chang|Guo Huo|90s,ballad
+味道|辛晓琪|Winnie Hsin|Wei Dao|90s,ballad
+领悟|辛晓琪|Winnie Hsin|Ling Wu|90s,ballad
+喜欢你|Beyond|Beyond|Xi Huan Ni|80s,upbeat
+海阔天空|Beyond|Beyond|Hai Kuo Tian Kong|90s,upbeat
+光辉岁月|Beyond|Beyond|Guang Hui Sui Yue|90s,upbeat
+真的爱你|Beyond|Beyond|Zhen De Ai Ni|80s,upbeat
+情人|Beyond|Beyond|Qing Ren|90s,ballad
+最炫民族风|凤凰传奇|Phoenix Legend|Zui Xuan Min Zu Feng|2000s,upbeat
+荷塘月色|凤凰传奇|Phoenix Legend|He Tang Yue Se|2000s,upbeat
+月亮之上|凤凰传奇|Phoenix Legend|Yue Liang Zhi Shang|2000s,upbeat
+自由飞翔|凤凰传奇|Phoenix Legend|Zi You Fei Xiang|2000s,upbeat
+全是爱|凤凰传奇|Phoenix Legend|Quan Shi Ai|2000s,upbeat
+后来|刘若英|Rene Liu|Hou Lai|90s,ballad
+很爱很爱你|刘若英|Rene Liu|Hen Ai Hen Ai Ni|90s,ballad
+为你我受冷风吹|林忆莲|Sandy Lam|Wei Ni Wo Shou Leng Feng Chui|90s,ballad
+至少还有你|林忆莲|Sandy Lam|Zhi Shao Hai You Ni|90s,ballad
+飘洋过海来看你|李宗盛|Jonathan Lee|Piao Yang Guo Hai Lai Kan Ni|90s,ballad
+凡人歌|李宗盛|Jonathan Lee|Fan Ren Ge|90s,ballad
+我是一只小小鸟|赵传|Chief Chao|Wo Shi Yi Zhi Xiao Xiao Niao|80s,upbeat
+我很丑可是我很温柔|赵传|Chief Chao|Wo Hen Chou Ke Shi Wo Hen Wen Rou|80s,ballad
+我终于失去了你|赵传|Chief Chao|Wo Zhong Yu Shi Qu Le Ni|80s,ballad
+一生所爱|卢冠廷|Lowell Lo|Yi Sheng Suo Ai|90s,ballad
+一场游戏一场梦|王杰|Dave Wong|Yi Chang You Xi Yi Chang Meng|80s,ballad
+安妮|王杰|Dave Wong|An Ni|80s,ballad
+新鸳鸯蝴蝶梦|黄安|Huang An|Xin Yuan Yang Hu Die Meng|90s,upbeat
+情凭谁来定错对|谭咏麟|Alan Tam|Qing Ping Shui Lai Ding Cuo Dui|80s,ballad
+一生中最爱|谭咏麟|Alan Tam|Yi Sheng Zhong Zui Ai|80s,ballad
+朋友|谭咏麟|Alan Tam|Peng You|80s,upbeat
+水中花|谭咏麟|Alan Tam|Shui Zhong Hua|80s,ballad
+沧海一声笑|许冠杰|Sam Hui|Cang Hai Yi Sheng Xiao|80s,upbeat
+笑傲江湖|吕方|Lu Fang|Xiao Ao Jiang Hu|90s,upbeat
+朋友别哭|吕方|Lu Fang|Peng You Bie Ku|90s,ballad
+弯弯的月亮|吕方|Lu Fang|Wan Wan De Yue Liang|90s,ballad
+纤夫的爱|于文华尹相杰|Yu Wenhua Yin Xiangjie|Qian Fu De Ai|90s,upbeat
+一生有你|水木年华|Shuimu Nianhua|Yi Sheng You Ni|2000s,ballad
+中华民谣|孙浩|Sun Hao|Zhong Hua Min Yao|90s,ballad
+爱江山更爱美人|李丽芬|Li Lifen|Ai Jiang Shan Geng Ai Mei Ren|90s,ballad
+走天涯|降央卓玛|Jiangyang Zhuoma|Zou Tian Ya|modern,ballad
+鸿雁|降央卓玛|Jiangyang Zhuoma|Hong Yan|modern,ballad
+套马杆|乌兰托娅|Wulan Tuoya|Tao Ma Gan|modern,upbeat
+火苗|乌兰托娅|Wulan Tuoya|Huo Miao|modern,upbeat
+突然之间|莫文蔚|Karen Mok|Tu Ran Zhi Jian|90s,ballad
+阴天|莫文蔚|Karen Mok|Yin Tian|90s,ballad
+存在|汪峰|Wang Feng|Cun Zai|2000s,upbeat
+春天里|汪峰|Wang Feng|Chun Tian Li|2000s,upbeat
+飞得更高|汪峰|Wang Feng|Fei De Geng Gao|2000s,upbeat
+怒放的生命|汪峰|Wang Feng|Nu Fang De Sheng Ming|2000s,upbeat
+北京北京|汪峰|Wang Feng|Bei Jing Bei Jing|2000s,ballad
+父亲|筷子兄弟|Chopstick Brothers|Fu Qin|modern,ballad
+小苹果|筷子兄弟|Chopstick Brothers|Xiao Ping Guo|modern,upbeat
+老男孩|筷子兄弟|Chopstick Brothers|Lao Nan Hai|modern,ballad
+草原之夜|德德玛|Dedema|Cao Yuan Zhi Ye|folk,ballad
+美丽的草原我的家|德德玛|Dedema|Mei Li De Cao Yuan Wo De Jia|folk,ballad
+鸿雁|呼斯楞|Husileng|Hong Yan|modern,folk,ballad
+父亲的草原母亲的河|德德玛|Dedema|Fu Qin De Cao Yuan Mu Qin De He|folk,ballad
+走四方|韩磊|Han Lei|Zou Si Fang|90s,upbeat
+天地吉祥|韩磊|Han Lei|Tian Di Ji Xiang|2000s,ballad
+向天再借五百年|韩磊|Han Lei|Xiang Tian Zai Jie Wu Bai Nian|90s,upbeat
+珊瑚海|周杰伦|Jay Chou|Shan Hu Hai|2000s,ballad
+世界末日|周杰伦|Jay Chou|Shi Jie Mo Ri|2000s,ballad
+蜗牛|周杰伦|Jay Chou|Wo Niu|2000s,ballad映山红|合唱|Chorus|Ying Shan Hong|70s,revolutionary,ballad
+红星歌|合唱|Chorus|Hong Xing Ge|70s,revolutionary,upbeat
+红梅赞|合唱|Chorus|Hong Mei Zan|60s,revolutionary,ballad
+谁不说俺家乡好|合唱|Chorus|Shui Bu Shuo Zan Jia Xiang Hao|60s,folk,upbeat
+北风吹|郭兰英|Guo Lanying|Bei Feng Chui|50s,ballad
+绣红旗|合唱|Chorus|Xiu Hong Qi|60s,revolutionary,ballad
+南泥湾|郭兰英|Guo Lanying|Nan Ni Wan|50s,revolutionary,upbeat
+绣金匾|郭兰英|Guo Lanying|Xiu Jin Bian|50s,revolutionary,upbeat
+打起手鼓唱起歌|合唱|Chorus|Da Qi Shou Gu Chang Qi Ge|70s,folk,upbeat
+赞歌|合唱|Chorus|Zan Ge|60s,folk,upbeat
+情深谊长|合唱|Chorus|Qing Shen Yi Chang|60s,folk,ballad
+山丹丹花开红艳艳|合唱|Chorus|Shan Dan Dan Hua Kai Hong Yan Yan|70s,folk,upbeat
+学习雷锋好榜样|合唱|Chorus|Xue Xi Lei Feng Hao Bang Yang|60s,revolutionary,upbeat
+打靶归来|合唱|Chorus|Da Ba Gui Lai|60s,revolutionary,upbeat
+没有共产党就没有新中国|合唱|Chorus|Mei You Gong Chan Dang Jiu Mei You Xin Zhong Guo|50s,revolutionary,upbeat
+中国人民解放军进行曲|合唱|Chorus|Zhong Guo Ren Min Jie Fang Jun Jin Xing Qu|50s,revolutionary,upbeat
+克拉玛依之歌|吕文科|Lu Wenke|Ke La Ma Yi Zhi Ge|50s,revolutionary,upbeat
+新疆好|合唱|Chorus|Xin Jiang Hao|50s,folk,upbeat
+远方的客人请你留下来|合唱|Chorus|Yuan Fang De Ke Ren Qing Ni Liu Xia Lai|60s,folk,upbeat
+唱支山歌给党听|才旦卓玛|Caidan Zhuoma|Chang Zhi Shan Ge Gei Dang Ting|60s,revolutionary,ballad
+黄河大合唱|合唱|Chorus|Huang He Da He Chang|50s,revolutionary,upbeat
+保卫黄河|合唱|Chorus|Bao Wei Huang He|50s,revolutionary,upbeat
+我爱你中国|叶佩英|Ye Peiying|Wo Ai Ni Zhong Guo|80s,ballad
+祖国颂|合唱|Chorus|Zu Guo Song|60s,revolutionary,upbeat
+歌唱二郎山|合唱|Chorus|Ge Chang Er Lang Shan|50s,revolutionary,upbeat
+边疆的泉水清又纯|李谷一|Li Guyi|Bian Jiang De Quan Shui Qing You Chun|80s,ballad
+小路|李谷一|Li Guyi|Xiao Lu|70s,ballad
+妹妹找哥泪花流|李谷一|Li Guyi|Mei Mei Zhao Ge Lei Hua Liu|80s,ballad
+泉水叮咚响|李谷一|Li Guyi|Quan Shui Ding Dong Xiang|80s,ballad
+军港之夜|苏小明|Su Xiaoming|Jun Gang Zhi Ye|80s,ballad
+海风啊海风|苏小明|Su Xiaoming|Hai Feng A Hai Feng|80s,ballad
+妈妈的吻|朱晓琳|Zhu Xiaolin|Ma Ma De Wen|80s,upbeat
+花仙子|朱晓琳|Zhu Xiaolin|Hua Xian Zi|80s,upbeat
+那一年我们十七岁|朱晓琳|Zhu Xiaolin|Na Yi Nian Wo Men Shi Qi Sui|80s,ballad
+小螺号|程琳|Cheng Lin|Xiao Luo Hao|80s,upbeat
+童年的小摇车|程琳|Cheng Lin|Tong Nian De Xiao Yao Che|80s,upbeat
+信天游|程琳|Cheng Lin|Xin Tian You|80s,ballad
+熊猫咪咪|程琳|Cheng Lin|Xiong Mao Mi Mi|80s,upbeat
+黄土高坡|范琳琳|Fan Linlin|Huang Tu Gao Po|80s,upbeat
+十五的月亮十六圆|范琳琳|Fan Linlin|Shi Wu De Yue Liang Shi Liu Yuan|80s,upbeat
+我热恋的故乡|范琳琳|Fan Linlin|Wo Re Lian De Gu Xiang|80s,ballad
+为了寻求美|范琳琳|Fan Linlin|Wei Le Xun Qiu Mei|80s,upbeat
+西部之恋|范琳琳|Fan Linlin|Xi Bu Zhi Lian|80s,ballad
+跟着感觉走|苏芮|Su Rui|Gen Zhe Gan Jue Zou|80s,upbeat
+酒干倘卖无|苏芮|Su Rui|Jiu Gan Tang Mai Wu|80s,ballad
+是否|苏芮|Su Rui|Shi Fou|80s,ballad
+一样的月光|苏芮|Su Rui|Yi Yang De Yue Guang|80s,ballad
+亲爱的小孩|苏芮|Su Rui|Qin Ai De Xiao Hai|80s,ballad
+搭错车|苏芮|Su Rui|Da Cuo Che|80s,ballad
+时代的节奏|韦唯|Wei Wei|Shi Dai De Jie Zou|80s,upbeat
+让我再看你一眼|韦唯|Wei Wei|Rang Wo Zai Kan Ni Yi Yan|80s,ballad
+献给妈妈的歌|韦唯|Wei Wei|Xian Gei Ma Ma De Ge|80s,ballad
+我不想说|韦唯|Wei Wei|Wo Bu Xiang Shuo|80s,ballad
+大爱无疆|韦唯|Wei Wei|Da Ai Wu Jiang|80s,ballad
+金梭和银梭|韦唯|Wei Wei|Jin Suo He Yin Suo|80s,upbeat
+历史的天空|毛阿敏|Mao Amin|Li Shi De Tian Kong|80s,ballad
+永远是朋友|毛阿敏|Mao Amin|Yong Yuan Shi Peng You|80s,ballad
+爱你一万年|毛阿敏|Mao Amin|Ai Ni Yi Wan Nian|80s,ballad
+相思|毛阿敏|Mao Amin|Xiang Si|80s,ballad
+天之大|毛阿敏|Mao Amin|Tian Zhi Da|modern,ballad
+苦篱笆|毛阿敏|Mao Amin|Ku Li Ba|80s,ballad
+在心里从此永远有个你|毛阿敏|Mao Amin|Zai Xin Li Cong Ci Yong Yuan You Ge Ni|80s,ballad
+心中的依恋|刘欢|Liu Huan|Xin Zhong De Yi Lian|80s,ballad
+英雄歌|刘欢|Liu Huan|Ying Xiong Ge|90s,upbeat
+花落花开|刘欢|Liu Huan|Hua Luo Hua Kai|90s,ballad
+你是这样的人|刘欢|Liu Huan|Ni Shi Zhe Yang De Ren|90s,ballad
+凤凰于飞|刘欢|Liu Huan|Feng Huang Yu Fei|90s,upbeat
+大浪淘沙|刘欢|Liu Huan|Da Lang Tao Sha|90s,upbeat
+天地在我心|刘欢|Liu Huan|Tian Di Zai Wo Xin|90s,upbeat
+两个人|刘欢|Liu Huan|Liang Ge Ren|90s,ballad
+赶集|刘欢|Liu Huan|Gan Ji|90s,upbeat
+谭咏麟|Liu Huan|Liu Huan|Tan Yong Lin|80s,ballad
+这一拜|刘欢|Liu Huan|Zhe Yi Bai|90s,upbeat
+迟到|董文华|Dong Wenhua|Chi Dao|90s,ballad
+十五的月亮|董文华|Dong Wenhua|Shi Wu De Yue Liang|80s,ballad
+春天的故事|董文华|Dong Wenhua|Chun Tian De Gu Shi|90s,upbeat
+长城长|董文华|Dong Wenhua|Chang Cheng Chang|90s,ballad
+血染的风采|董文华|Dong Wenhua|Xue Ran De Feng Cai|80s,ballad
+我不想说|董文华|Dong Wenhua|Wo Bu Xiang Shuo|90s,ballad
+望星空|董文华|Dong Wenhua|Wang Xing Kong|90s,ballad
+月光下的凤尾竹|董文华|Dong Wenhua|Yue Guang Xia De Feng Wei Zhu|90s,ballad
+在希望的田野上|董文华|Dong Wenhua|Zai Xi Wang De Tian Ye Shang|80s,upbeat
+大中国|高枫|Gao Feng|Da Zhong Guo|90s,upbeat
+风雨永恒|高枫|Gao Feng|Feng Yu Yong Heng|90s,upbeat
+缘分|高枫|Gao Feng|Yuan Fen|90s,ballad
+精忠报国|屠洪刚|Tu Honggang|Jing Zhong Bao Guo|90s,upbeat
+中国功夫|屠洪刚|Tu Honggang|Zhong Guo Gong Fu|90s,upbeat
+霸王别姬|屠洪刚|Tu Honggang|Ba Wang Bie Ji|90s,upbeat
+你|屠洪刚|Tu Honggang|Ni|90s,ballad
+中华民谣|孙浩|Sun Hao|Zhong Hua Min Yao|90s,ballad
+中国娃|解晓东|Xie Xiaodong|Zhong Guo Wa|90s,upbeat
+月朦胧鸟朦胧|毛宁|Mao Ning|Yue Meng Long Niao Meng Long|90s,ballad
+涛声依旧|毛宁|Mao Ning|Tao Sheng Yi Jiu|90s,ballad
+大浪淘沙|毛宁|Mao Ning|Da Lang Tao Sha|90s,upbeat
+晚秋|毛宁|Mao Ning|Wan Qiu|90s,ballad
+我的中国心|张明敏|Zhang Mingmin|Wo De Zhong Guo Xin|80s,upbeat
+我是中国人|张明敏|Zhang Mingmin|Wo Shi Zhong Guo Ren|80s,upbeat
+万里长城永不倒|吕方|Lu Fang|Wan Li Chang Cheng Yong Bu Dao|80s,upbeat
+上海滩|叶丽仪|Ye Liyi|Shang Hai Tan|80s,ballad
+铁血丹心|罗文甄妮|Luo Wen Zhen Ni|Tie Xue Dan Xin|80s,upbeat
+万水千山总是情|汪明荃|Wang Mingquan|Wan Shui Qian Shan Zong Shi Qing|80s,ballad
+世间始终你好|罗文|Luo Wen|Shi Jian Shi Zhong Ni Hao|80s,ballad
+小李飞刀|罗文|Luo Wen|Xiao Li Fei Dao|80s,upbeat
+射雕英雄传|罗文|Luo Wen|She Diao Ying Xiong Zhuan|80s,upbeat
+大海|张雨生|Zhang Yusheng|Da Hai|90s,upbeat
+天天想你|张雨生|Zhang Yusheng|Tian Tian Xiang Ni|90s,ballad
+口是心非|张雨生|Zhang Yusheng|Kou Shi Xin Fei|90s,ballad
+一天到晚游泳的鱼|张雨生|Zhang Yusheng|Yi Tian Dao Wan You Yong De Yu|90s,upbeat
+没有烟抽的日子|张雨生|Zhang Yusheng|Mei You Yan Chou De Ri Zi|90s,ballad
+永远不回头|张雨生|Zhang Yusheng|Yong Yuan Bu Hui Tou|90s,upbeat
+年轻时代|郑智化|Zheng Zhihua|Nian Qing Shi Dai|90s,upbeat
+麻将|郑智化|Zheng Zhihua|Ma Jiang|90s,upbeat
+单身逃亡|郑智化|Zheng Zhihua|Dan Shen Tao Wang|90s,upbeat
+老么的故事|郑智化|Zheng Zhihua|Lao Yao De Gu Shi|90s,ballad
+你的生日|郑智化|Zheng Zhihua|Ni De Sheng Ri|90s,ballad
+堕落天使|郑智化|Zheng Zhihua|Duo Luo Tian Shi|90s,ballad
+游戏人间|郑智化|Zheng Zhihua|You Xi Ren Jian|90s,upbeat
+不让我的眼泪陪我过夜|齐秦|Chyi Chin|Bu Rang Wo De Yan Lei Pei Wo Guo Ye|90s,ballad
+花祭|齐秦|Chyi Chin|Hua Ji|90s,ballad
+原来的我|齐秦|Chyi Chin|Yuan Lai De Wo|90s,ballad
+狼|齐秦|Chyi Chin|Lang|90s,upbeat
+太阳雨|齐秦|Chyi Chin|Tai Yang Yu|90s,ballad
+悬崖|齐秦|Chyi Chin|Xuan Ya|90s,ballad
+无情的雨无情的你|齐秦|Chyi Chin|Wu Qing De Yu Wu Qing De Ni|90s,ballad
+梦醒了|那英|Na Ying|Meng Xing Le|90s,ballad
+一笑而过|那英|Na Ying|Yi Xiao Er Guo|90s,ballad
+山不转水转|那英|Na Ying|Shan Bu Zhuan Shui Zhuan|90s,upbeat
+你的柔情我永远不懂|那英|Na Ying|Ni De Rou Qing Wo Yong Yuan Bu Dong|90s,ballad
+相见不如怀念|那英|Na Ying|Xiang Jian Bu Ru Huai Nian|90s,ballad
+春暖花开|那英|Na Ying|Chun Nuan Hua Kai|90s,upbeat
+为你朝思暮想|那英|Na Ying|Wei Ni Zhao Si Mu Xiang|90s,ballad
+铁窗|田震|Tian Zhen|Tie Chuang|90s,ballad
+月牙泉|田震|Tian Zhen|Yue Ya Quan|90s,ballad
+爱了就爱了|田震|Tian Zhen|Ai Le Jiu Ai Le|90s,upbeat
+壮志雄心|田震|Tian Zhen|Zhuang Zhi Xiong Xin|90s,upbeat
+风雨兼程|田震|Tian Zhen|Feng Yu Jian Cheng|90s,upbeat
+黄土高坡|田震|Tian Zhen|Huang Tu Gao Po|90s,upbeat
+恋恋风尘|老狼|Lao Lang|Lian Lian Feng Chen|90s,ballad
+模范情书|老狼|Lao Lang|Mo Fan Qing Shu|90s,ballad
+虎口脱险|老狼|Lao Lang|Hu Kou Tuo Xian|90s,upbeat
+关于现在关于未来|老狼|Lao Lang|Guan Yu Xian Zai Guan Yu Wei Lai|90s,ballad
+晴朗|老狼|Lao Lang|Qing Lang|90s,ballad
+一剪梅|费玉清|Fei Yuqing|Yi Jian Mei|80s,ballad
+梦驼铃|费玉清|Fei Yuqing|Meng Tuo Ling|80s,ballad
+长相思|费玉清|Fei Yuqing|Chang Xiang Si|80s,ballad
+南屏晚钟|费玉清|Fei Yuqing|Nan Ping Wan Zhong|80s,ballad
+中华民族|费玉清|Fei Yuqing|Zhong Hua Min Zu|80s,upbeat
+我曾用心爱着你|潘美辰|Pan Meichen|Wo Ceng Yong Xin Ai Zhe Ni|90s,ballad
+我想有个家|潘美辰|Pan Meichen|Wo Xiang You Ge Jia|90s,ballad
+无情的雨无情的你|潘美辰|Pan Meichen|Wu Qing De Yu Wu Qing De Ni|90s,ballad
+请跟我来|苏芮|Su Rui|Qing Gen Wo Lai|80s,upbeat
+我是不是你最疼爱的人|潘越云|Pan Yueyun|Wo Shi Bu Shi Ni Zui Teng Ai De Ren|90s,ballad
+谁的眼泪在飞|孟庭苇|Meng Tingwei|Shui De Yan Lei Zai Fei|90s,ballad
+风中有朵雨做的云|孟庭苇|Meng Tingwei|Feng Zhong You Duo Yu Zuo De Yun|90s,ballad
+羞答答的玫瑰静悄悄地开|孟庭苇|Meng Tingwei|Xiu Da Da De Mei Gui Jing Qiao Qiao Di Kai|90s,upbeat
+你看你看月亮的脸|孟庭苇|Meng Tingwei|Ni Kan Ni Kan Yue Liang De Lian|90s,ballad
+冬季到台北来看雨|孟庭苇|Meng Tingwei|Dong Ji Dao Tai Bei Lai Kan Yu|90s,ballad
+没有情人的情人节|孟庭苇|Meng Tingwei|Mei You Qing Ren De Qing Ren Jie|90s,ballad
+美丽的神话|孙楠|Sun Nan|Mei Li De Shen Hua|2000s,ballad
+不见不散|孙楠|Sun Nan|Bu Jian Bu San|90s,ballad
+拯救|孙楠|Sun Nan|Zheng Jiu|90s,ballad
+燃烧|孙楠|Sun Nan|Ran Shao|90s,upbeat
+风往北吹|孙楠|Sun Nan|Feng Wang Bei Chui|90s,upbeat
+你快回来|孙楠|Sun Nan|Ni Kuai Hui Lai|90s,ballad
+风中有朵雨做的云|孙楠|Sun Nan|Feng Zhong You Duo Yu Zuo De Yun|90s,ballad
+月亮代表我的心|邓丽君|Teresa Teng|Yue Liang Dai Biao Wo De Xin|70s,ballad
+甜蜜蜜|邓丽君|Teresa Teng|Tian Mi Mi|70s,upbeat
+我只在乎你|邓丽君|Teresa Teng|Wo Zhi Zai Hu Ni|70s,ballad
+小城故事|邓丽君|Teresa Teng|Xiao Cheng Gu Shi|70s,ballad
+夜来香|邓丽君|Teresa Teng|Ye Lai Xiang|70s,ballad
+路边的野花不要采|邓丽君|Teresa Teng|Lu Bian De Ye Hua Bu Yao Cai|70s,upbeat
+何日君再来|邓丽君|Teresa Teng|He Ri Jun Zai Lai|70s,ballad
+但愿人长久|邓丽君|Teresa Teng|Dan Yuan Ren Chang Jiu|70s,ballad
+在水一方|邓丽君|Teresa Teng|Zai Shui Yi Fang|70s,ballad
+独上西楼|邓丽君|Teresa Teng|Du Shang Xi Lou|70s,ballad
+南海姑娘|邓丽君|Teresa Teng|Nan Hai Gu Niang|70s,upbeat
+初恋的地方|邓丽君|Teresa Teng|Chu Lian De Di Fang|70s,ballad
+忘记他|邓丽君|Teresa Teng|Wang Ji Ta|70s,ballad
+又见炊烟|邓丽君|Teresa Teng|You Jian Chui Yan|70s,ballad
+美酒加咖啡|邓丽君|Teresa Teng|Mei Jiu Jia Ka Fei|70s,upbeat
+几多愁|邓丽君|Teresa Teng|Ji Duo Chou|70s,ballad
+海韵|邓丽君|Teresa Teng|Hai Yun|70s,ballad
+东山飘雨西山晴|邓丽君|Teresa Teng|Dong Shan Piao Yu Xi Shan Qing|70s,ballad
+人约黄昏后|邓丽君|Teresa Teng|Ren Yue Huang Hun Hou|70s,ballad
+雪中情|邓丽君|Teresa Teng|Xue Zhong Qing|70s,ballad
+清晨我们踏上小道|邓丽君|Teresa Teng|Qing Chen Wo Men Ta Shang Xiao Dao|70s,upbeat
+心软|任贤齐|Richie Ren|Xin Ruan|90s,ballad
+对面的女孩看过来|任贤齐|Richie Ren|Dui Mian De Nu Hai Kan Guo Lai|90s,upbeat
+伤心太平洋|任贤齐|Richie Ren|Shang Xin Tai Ping Yang|90s,ballad
+天涯|任贤齐|Richie Ren|Tian Ya|90s,upbeat
+依靠|任贤齐|Richie Ren|Yi Kao|90s,ballad
+兄弟|任贤齐|Richie Ren|Xiong Di|90s,upbeat
+我是一只鱼|任贤齐|Richie Ren|Wo Shi Yi Zhi Yu|90s,upbeat
+春天花会开|任贤齐|Richie Ren|Chun Tian Hua Hui Kai|90s,upbeat
+小雪|任贤齐|Richie Ren|Xiao Xue|90s,ballad
+死不了|任贤齐|Richie Ren|Si Bu Liao|90s,upbeat
+爱如潮水|张信哲|Jeff Chang|Ai Ru Chao Shui|90s,ballad
+白月光|张信哲|Jeff Chang|Bai Yue Guang|2000s,ballad
+过火|张信哲|Jeff Chang|Guo Huo|90s,ballad
+有一点动心|张信哲|Jeff Chang|You Yi Dian Dong Xin|90s,ballad
+宽容|张信哲|Jeff Chang|Kuan Rong|90s,ballad
+从开始到现在|张信哲|Jeff Chang|Cong Kai Shi Dao Xian Zai|90s,ballad
+别怕我伤心|张信哲|Jeff Chang|Bie Pa Wo Shang Xin|90s,ballad
+信仰|张信哲|Jeff Chang|Xin Yang|90s,ballad
+心里有数|张信哲|Jeff Chang|Xin Li You Shu|90s,ballad
+味道|辛晓琪|Winnie Hsin|Wei Dao|90s,ballad
+领悟|辛晓琪|Winnie Hsin|Ling Wu|90s,ballad
+深情难了|辛晓琪|Winnie Hsin|Shen Qing Nan Liao|90s,ballad
+俩俩相忘|辛晓琪|Winnie Hsin|Liang Liang Xiang Wang|90s,ballad
+喜欢你|Beyond|Beyond|Xi Huan Ni|80s,upbeat
+海阔天空|Beyond|Beyond|Hai Kuo Tian Kong|90s,upbeat
+光辉岁月|Beyond|Beyond|Guang Hui Sui Yue|90s,upbeat
+真的爱你|Beyond|Beyond|Zhen De Ai Ni|80s,upbeat
+情人|Beyond|Beyond|Qing Ren|90s,ballad
+大地|Beyond|Beyond|Da Di|90s,upbeat
+冷雨夜|Beyond|Beyond|Leng Yu Ye|80s,ballad
+不再犹豫|Beyond|Beyond|Bu Zai You Yu|90s,upbeat
+谁伴我闯荡|Beyond|Beyond|Shui Ban Wo Chuang Dang|90s,upbeat
+农民|Beyond|Beyond|Nong Min|90s,upbeat
+后来|刘若英|Rene Liu|Hou Lai|90s,ballad
+很爱很爱你|刘若英|Rene Liu|Hen Ai Hen Ai Ni|90s,ballad
+为爱痴狂|刘若英|Rene Liu|Wei Ai Chi Kuang|90s,upbeat
+原来你也在这里|刘若英|Rene Liu|Yuan Lai Ni Ye Zai Zhe Li|90s,ballad
+听说|刘若英|Rene Liu|Ting Shuo|modern,ballad
+为你我受冷风吹|林忆莲|Sandy Lam|Wei Ni Wo Shou Leng Feng Chui|90s,ballad
+至少还有你|林忆莲|Sandy Lam|Zhi Shao Hai You Ni|90s,ballad
+伤痕|林忆莲|Sandy Lam|Shang Hen|90s,ballad
+依然|林忆莲|Sandy Lam|Yi Ran|90s,ballad
+飘洋过海来看你|李宗盛|Jonathan Lee|Piao Yang Guo Hai Lai Kan Ni|90s,ballad
+凡人歌|李宗盛|Jonathan Lee|Fan Ren Ge|90s,ballad
+爱的代价|李宗盛|Jonathan Lee|Ai De Dai Jia|80s,ballad
+梦醒时分|陈淑桦|Chen Shuhua|Meng Xing Shi Fen|90s,ballad
+明明白白我的心|陈淑桦|Chen Shuhua|Ming Ming Bai Bai Wo De Xin|90s,ballad
+滚滚红尘|陈淑桦|Chen Shuhua|Gun Gun Hong Chen|90s,ballad
+笑红尘|陈淑桦|Chen Shuhua|Xiao Hong Chen|90s,ballad
+我很丑可是我很温柔|赵传|Chief Chao|Wo Hen Chou Ke Shi Wo Hen Wen Rou|80s,ballad
+我终于失去了你|赵传|Chief Chao|Wo Zhong Yu Shi Qu Le Ni|80s,ballad
+我是一只小小鸟|赵传|Chief Chao|Wo Shi Yi Zhi Xiao Xiao Niao|80s,upbeat
+勇敢一点|赵传|Chief Chao|Yong Gan Yi Dian|80s,upbeat
+那个傻瓜爱过你|赵传|Chief Chao|Na Ge Sha Gua Ai Guo Ni|80s,ballad
+一生所爱|卢冠廷|Lowell Lo|Yi Sheng Suo Ai|90s,ballad
+一场游戏一场梦|王杰|Dave Wong|Yi Chang You Xi Yi Chang Meng|80s,ballad
+安妮|王杰|Dave Wong|An Ni|80s,ballad
+一场游戏一场梦|王杰|Dave Wong|Yi Chang You Xi Yi Chang Meng|80s,ballad
+谁明浪子心|王杰|Dave Wong|Shui Ming Lang Zi Xin|80s,ballad
+为了爱梦一生|王杰|Dave Wong|Wei Le Ai Meng Yi Sheng|80s,ballad
+新鸳鸯蝴蝶梦|黄安|Huang An|Xin Yuan Yang Hu Die Meng|90s,upbeat
+东西南北风|黄安|Huang An|Dong Xi Nan Bei Feng|90s,upbeat
+情凭谁来定错对|谭咏麟|Alan Tam|Qing Ping Shui Lai Ding Cuo Dui|80s,ballad
+一生中最爱|谭咏麟|Alan Tam|Yi Sheng Zhong Zui Ai|80s,ballad
+朋友|谭咏麟|Alan Tam|Peng You|80s,upbeat
+水中花|谭咏麟|Alan Tam|Shui Zhong Hua|80s,ballad
+爱在深秋|谭咏麟|Alan Tam|Ai Zai Shen Qiu|80s,ballad
+雾之恋|谭咏麟|Alan Tam|Wu Zhi Lian|80s,ballad
+沧海一声笑|许冠杰|Sam Hui|Cang Hai Yi Sheng Xiao|80s,upbeat
+半斤八两|许冠杰|Sam Hui|Ban Jin Ba Liang|80s,upbeat
+浪子心声|许冠杰|Sam Hui|Lang Zi Xin Sheng|80s,ballad
+天才白痴梦|许冠杰|Sam Hui|Tian Cai Bai Chi Meng|80s,upbeat
+双星情歌|许冠杰|Sam Hui|Shuang Xing Qing Ge|80s,ballad
+朋友别哭|吕方|Lu Fang|Peng You Bie Ku|90s,ballad
+弯弯的月亮|吕方|Lu Fang|Wan Wan De Yue Liang|90s,ballad
+恋曲1990|罗大佑|Luo Dayou|Lian Qu 1990|90s,ballad
+童年|罗大佑|Luo Dayou|Tong Nian|80s,ballad
+光阴的故事|罗大佑|Luo Dayou|Guang Yin De Gu Shi|80s,ballad
+东方之珠|罗大佑|Luo Dayou|Dong Fang Zhi Zhu|90s,ballad
+野百合也有春天|罗大佑|Luo Dayou|Ye Bai He Ye You Chun Tian|80s,ballad
+爱人同志|罗大佑|Luo Dayou|Ai Ren Tong Zhi|90s,ballad
+恋曲1980|罗大佑|Luo Dayou|Lian Qu 1980|80s,ballad
+纤夫的爱|于文华尹相杰|Yu Wenhua Yin Xiangjie|Qian Fu De Ai|90s,upbeat
+一生有你|水木年华|Shuimu Nianhua|Yi Sheng You Ni|2000s,ballad
+启程|水木年华|Shuimu Nianhua|Qi Cheng|2000s,upbeat
+生活美好|水木年华|Shuimu Nianhua|Sheng Huo Mei Hao|2000s,upbeat
+爱江山更爱美人|李丽芬|Li Lifen|Ai Jiang Shan Geng Ai Mei Ren|90s,ballad
+走天涯|降央卓玛|Jiangyang Zhuoma|Zou Tian Ya|modern,ballad
+鸿雁|降央卓玛|Jiangyang Zhuoma|Hong Yan|modern,ballad
+父亲的草原母亲的河|降央卓玛|Jiangyang Zhuoma|Fu Qin De Cao Yuan Mu Qin De He|modern,ballad
+套马杆|乌兰托娅|Wulan Tuoya|Tao Ma Gan|modern,upbeat
+火苗|乌兰托娅|Wulan Tuoya|Huo Miao|modern,upbeat
+陪你一起看草原|乌兰托娅|Wulan Tuoya|Pei Ni Yi Qi Kan Cao Yuan|modern,upbeat
+站在草原望北京|乌兰托娅|Wulan Tuoya|Zhan Zai Cao Yuan Wang Bei Jing|modern,upbeat
+最炫民族风|凤凰传奇|Phoenix Legend|Zui Xuan Min Zu Feng|2000s,upbeat
+荷塘月色|凤凰传奇|Phoenix Legend|He Tang Yue Se|2000s,upbeat
+月亮之上|凤凰传奇|Phoenix Legend|Yue Liang Zhi Shang|2000s,upbeat
+自由飞翔|凤凰传奇|Phoenix Legend|Zi You Fei Xiang|2000s,upbeat
+全是爱|凤凰传奇|Phoenix Legend|Quan Shi Ai|2000s,upbeat
+中国我爱你|凤凰传奇|Phoenix Legend|Zhong Guo Wo Ai Ni|2000s,upbeat
+郎的诱惑|凤凰传奇|Phoenix Legend|Lang De You Huo|2000s,upbeat
+溜溜的姑娘像朵花|凤凰传奇|Phoenix Legend|Liu Liu De Gu Niang Xiang Duo Hua|2000s,upbeat
+等爱的玫瑰|凤凰传奇|Phoenix Legend|Deng Ai De Mei Gui|2000s,upbeat
+御龙归字谣|凤凰传奇|Phoenix Legend|Yu Long Gui Zi Yao|modern,upbeat
+草原之夜|德德玛|Dedema|Cao Yuan Zhi Ye|folk,ballad
+美丽的草原我的家|德德玛|Dedema|Mei Li De Cao Yuan Wo De Jia|folk,ballad
+鸿雁|呼斯楞|Husileng|Hong Yan|modern,folk,ballad
+站在草原望北京|呼斯楞|Husileng|Zhan Zai Cao Yuan Wang Bei Jing|modern,folk,upbeat
+走四方|韩磊|Han Lei|Zou Si Fang|90s,upbeat
+天地吉祥|韩磊|Han Lei|Tian Di Ji Xiang|2000s,ballad
+向天再借五百年|韩磊|Han Lei|Xiang Tian Zai Jie Wu Bai Nian|90s,upbeat
+等待|韩磊|Han Lei|Deng Dai|90s,ballad
+苏武牧羊|韩磊|Han Lei|Su Wu Mu Yang|90s,ballad
+存在|汪峰|Wang Feng|Cun Zai|2000s,upbeat
+春天里|汪峰|Wang Feng|Chun Tian Li|2000s,upbeat
+飞得更高|汪峰|Wang Feng|Fei De Geng Gao|2000s,upbeat
+怒放的生命|汪峰|Wang Feng|Nu Fang De Sheng Ming|2000s,upbeat
+北京北京|汪峰|Wang Feng|Bei Jing Bei Jing|2000s,ballad
+像梦一样自由|汪峰|Wang Feng|Xiang Meng Yi Yang Zi You|2000s,upbeat
+勇敢的心|汪峰|Wang Feng|Yong Gan De Xin|2000s,upbeat
+硬币|汪峰|Wang Feng|Ying Bi|2000s,ballad
+父亲|筷子兄弟|Chopstick Brothers|Fu Qin|modern,ballad
+小苹果|筷子兄弟|Chopstick Brothers|Xiao Ping Guo|modern,upbeat
+老男孩|筷子兄弟|Chopstick Brothers|Lao Nan Hai|modern,ballad
+童话|光良|Michael Wong|Tong Hua|2000s,ballad
+第一次|光良|Michael Wong|Di Yi Ci|2000s,ballad
+吻别|张学友|Jacky Cheung|Wen Bie|90s,ballad
+一路上有你|张学友|Jacky Cheung|Yi Lu Shang You Ni|90s,ballad
+祝福|张学友|Jacky Cheung|Zhu Fu|90s,ballad
+心如刀割|张学友|Jacky Cheung|Xin Ru Dao Ge|90s,ballad
+情网|张学友|Jacky Cheung|Qing Wang|90s,ballad
+每天爱你多一些|张学友|Jacky Cheung|Mei Tian Ai Ni Duo Yi Xie|90s,ballad
+饿狼传说|张学友|Jacky Cheung|E Lang Chuan Shuo|90s,upbeat
+夕阳醉了|张学友|Jacky Cheung|Xi Yang Zui Le|90s,ballad
+回头太难|张学友|Jacky Cheung|Hui Tou Tai Nan|90s,ballad
+想和你去吹吹风|张学友|Jacky Cheung|Xiang He Ni Qu Chui Chui Feng|90s,ballad
+情已逝|张学友|Jacky Cheung|Qing Yi Shi|90s,ballad
+倩女幽魂|张国荣|Leslie Cheung|Qian Nu You Hun|80s,upbeat
+当年情|张国荣|Leslie Cheung|Dang Nian Qing|80s,ballad
+Monica|张国荣|Leslie Cheung|Monica|80s,upbeat
+风再起时|张国荣|Leslie Cheung|Feng Zai Qi Shi|90s,ballad
+追|张国荣|Leslie Cheung|Zhui|80s,upbeat
+风继续吹|张国荣|Leslie Cheung|Feng Ji Xu Chui|80s,ballad
+沉默是金|张国荣|Leslie Cheung|Chen Mo Shi Jin|80s,ballad
+有谁共鸣|张国荣|Leslie Cheung|You Shui Gong Ming|80s,ballad
+千千阙歌|陈慧娴|Priscilla Chan|Qian Qian Que Ge|80s,ballad
+飘雪|陈慧娴|Priscilla Chan|Piao Xue|80s,ballad
+归来吧|陈慧娴|Priscilla Chan|Gui Lai Ba|80s,ballad
+偏偏喜欢你|陈百强|Danny Chan|Pian Pian Xi Huan Ni|80s,ballad
+一生何求|陈百强|Danny Chan|Yi Sheng He Qiu|80s,ballad
+不|陈百强|Danny Chan|Bu|80s,ballad
+相思河畔|梅艳芳|Anita Mui|Xiang Si He Pan|80s,ballad
+女人花|梅艳芳|Anita Mui|Nu Ren Hua|90s,ballad
+似水流年|梅艳芳|Anita Mui|Si Shui Liu Nian|80s,ballad
+夕阳之歌|梅艳芳|Anita Mui|Xi Yang Zhi Ge|90s,ballad
+朋友|周华健|Wakin Chau|Peng You|90s,upbeat
+花心|周华健|Wakin Chau|Hua Xin|90s,ballad
+有没有一首歌会让你想起我|周华健|Wakin Chau|You Mei You Yi Shou Ge Hui Rang Ni Xiang Qi Wo|90s,ballad
+忘忧草|周华健|Wakin Chau|Wang You Cao|90s,ballad
+刀剑如梦|周华健|Wakin Chau|Dao Jian Ru Meng|90s,upbeat
+最真的梦|周华健|Wakin Chau|Zui Zhen De Meng|90s,ballad
+孤枕难眠|周华健|Wakin Chau|Gu Zhen Nan Mian|90s,ballad
+风雨无阻|周华健|Wakin Chau|Feng Yu Wu Zu|90s,upbeat
+冰雨|刘德华|Andy Lau|Bing Yu|90s,ballad
+忘情水|刘德华|Andy Lau|Wang Qing Shui|90s,ballad
+谢谢你的爱|刘德华|Andy Lau|Xie Xie Ni De Ai|90s,ballad
+来生缘|刘德华|Andy Lau|Lai Sheng Yuan|90s,ballad
+男人哭吧不是罪|刘德华|Andy Lau|Nan Ren Ku Ba Bu Shi Zui|90s,ballad
+今天|刘德华|Andy Lau|Jin Tian|90s,upbeat
+中国人|刘德华|Andy Lau|Zhong Guo Ren|90s,upbeat
+恭喜发财|刘德华|Andy Lau|Gong Xi Fa Cai|2000s,upbeat
+红豆|王菲|Faye Wong|Hong Dou|90s,ballad
+匆匆那年|王菲|Faye Wong|Cong Cong Na Nian|modern,ballad
+传奇|王菲|Faye Wong|Chuan Qi|2000s,ballad
+我愿意|王菲|Faye Wong|Wo Yuan Yi|90s,ballad
+容易受伤的女人|王菲|Faye Wong|Rong Yi Shou Shang De Nu Ren|90s,ballad
+执迷不悔|王菲|Faye Wong|Zhi Mi Bu Hui|90s,ballad
+天空|王菲|Faye Wong|Tian Kong|90s,ballad
+约定|王菲|Faye Wong|Yue Ding|90s,ballad
+爱与痛的边缘|王菲|Faye Wong|Ai Yu Tong De Bian Yuan|90s,ballad
+勇气|梁静茹|Fish Leong|Yong Qi|2000s,ballad
+分手快乐|梁静茹|Fish Leong|Fen Shou Kuai Le|2000s,upbeat
+宁夏|梁静茹|Fish Leong|Ning Xia|2000s,ballad
+可惜不是你|梁静茹|Fish Leong|Ke Xi Bu Shi Ni|2000s,ballad
+暖暖|梁静茹|Fish Leong|Nuan Nuan|2000s,ballad
+燕尾蝶|梁静茹|Fish Leong|Yan Wei Die|2000s,ballad
+崇拜|梁静茹|Fish Leong|Chong Bai|2000s,ballad
+突然之间|莫文蔚|Karen Mok|Tu Ran Zhi Jian|90s,ballad
+阴天|莫文蔚|Karen Mok|Yin Tian|90s,ballad
+盛夏的果实|莫文蔚|Karen Mok|Sheng Xia De Guo Shi|90s,upbeat
+恰似你的温柔|蔡琴|Tsai Chin|Qia Si Ni De Wen Rou|80s,ballad
+被遗忘的时光|蔡琴|Tsai Chin|Bei Yi Wang De Shi Guang|80s,ballad
+你的眼神|蔡琴|Tsai Chin|Ni De Yan Shen|80s,ballad
+千言万语|邓丽君|Teresa Teng|Qian Yan Wan Yu|70s,ballad
+你怎么说|邓丽君|Teresa Teng|Ni Zen Me Shuo|70s,upbeat
+再回首|姜育恒|Jiang Yuheng|Zai Hui Shou|90s,ballad
+驿动的心|姜育恒|Jiang Yuheng|Yi Dong De Xin|90s,ballad
+其实你不懂我的心|童安格|Tong Ange|Qi Shi Ni Bu Dong Wo De Xin|90s,ballad
+梦开始的地方|童安格|Tong Ange|Meng Kai Shi De Di Fang|90s,ballad
+耶利亚女郎|童安格|Tong Ange|Ye Li Ya Nu Lang|90s,upbeat
+忘不了|童安格|Tong Ange|Wang Bu Liao|90s,ballad
+把根留住|童安格|Tong Ange|Ba Gen Liu Zhu|90s,ballad
+月亮惹的祸|张宇|Zhang Yu|Yue Liang Ruo De Huo|90s,ballad
+雨一直下|张宇|Zhang Yu|Yu Yi Zhi Xia|90s,ballad
+用心良苦|张宇|Zhang Yu|Yong Xin Liang Ku|90s,ballad
+走路有风|张宇|Zhang Yu|Zou Lu You Feng|90s,upbeat
+一言难尽|张宇|Zhang Yu|Yi Yan Nan Jin|90s,ballad
+让我一次爱个够|庾澄庆|Harlem Yu|Rang Wo Yi Ci Ai Ge Gou|90s,upbeat
+情非得已|庾澄庆|Harlem Yu|Qing Fei De Yi|2000s,ballad
+春泥|庾澄庆|Harlem Yu|Chun Ni|2000s,ballad
+想念|庾澄庆|Harlem Yu|Xiang Nian|2000s,ballad
+小芳|李春波|Li Chunbo|Xiao Fang|90s,ballad
+一封家书|李春波|Li Chunbo|Yi Feng Jia Shu|90s,ballad
+九妹|黄鹤翔|Huang Hexiang|Jiu Mei|90s,ballad
+走过咖啡屋|千百惠|Qian Baihui|Zou Guo Ka Fei Wu|90s,ballad
+想你的时候|千百惠|Qian Baihui|Xiang Ni De Shi Hou|90s,ballad
+亲爱的你在哪里|千百惠|Qian Baihui|Qin Ai De Ni Zai Na Li|90s,ballad
+驿动的心|千百惠|Qian Baihui|Yi Dong De Xin|90s,ballad
+一帘幽梦|许茹芸|Valen Hsu|Yi Lian You Meng|90s,ballad
+泪海|许茹芸|Valen Hsu|Lei Hai|90s,ballad
+如果云知道|许茹芸|Valen Hsu|Ru Guo Yun Zhi Dao|90s,ballad
+我依然爱你|许茹芸|Valen Hsu|Wo Yi Ran Ai Ni|90s,ballad
+千年等一回|高胜美|Gao Shengmei|Qian Nian Deng Yi Hui|90s,ballad
+青青河边草|高胜美|Gao Shengmei|Qing Qing He Bian Cao|90s,upbeat
+天若有情|高胜美|Gao Shengmei|Tian Ruo You Qing|90s,ballad
+缘|高胜美|Gao Shengmei|Yuan|90s,ballad
+红红的蝴蝶结|高胜美|Gao Shengmei|Hong Hong De Hu Die Jie|90s,upbeat
+祝你平安|孙悦|Sun Yue|Zhu Ni Ping An|90s,ballad
+快乐老家|孙悦|Sun Yue|Kuai Le Lao Jia|90s,upbeat
+祈祷|王杰|Dave Wong|Qi Dao|90s,ballad
+是否我真的一无所有|王杰|Dave Wong|Shi Fou Wo Zhen De Yi Wu Suo You|90s,ballad
+红尘有你|王杰|Dave Wong|Hong Chen You Ni|90s,ballad
+英雄泪|王杰|Dave Wong|Ying Xiong Lei|90s,ballad
+故事的角色|王杰|Dave Wong|Gu Shi De Jue Se|90s,ballad
+忘了你忘了我|王杰|Dave Wong|Wang Le Ni Wang Le Wo|90s,ballad
+谁|王杰|Dave Wong|Shui|90s,ballad
+青苹果乐园|小虎队|Little Tigers|Qing Ping Guo Le Yuan|90s,upbeat
+红蜻蜓|小虎队|Little Tigers|Hong Qing Ting|90s,upbeat
+爱|小虎队|Little Tigers|Ai|90s,upbeat
+蝴蝶飞呀|小虎队|Little Tigers|Hu Die Fei Ya|90s,upbeat
+星光依旧灿烂|小虎队|Little Tigers|Xing Guang Yi Jiu Can Lan|90s,upbeat
+常回家看看|陈红|Chen Hong|Chang Hui Jia Kan Kan|90s,ballad
+流浪歌|陈星|Chen Xing|Liu Lang Ge|2000s,ballad
+北方的天空|黑豹乐队|Black Panther|Bei Fang De Tian Kong|90s,upbeat
+无地自容|黑豹乐队|Black Panther|Wu Di Zi Rong|90s,upbeat
+Don't Break My Heart|黑豹乐队|Black Panther|Don't Break My Heart|90s,upbeat
+姐姐|张楚|Zhang Chu|Jie Jie|90s,ballad
+孤独的人是可耻的|张楚|Zhang Chu|Gu Du De Ren Shi Ke Chi De|90s,upbeat
+完全的拥有|郑智化|Zheng Zhihua|Wan Quan De Yong You|90s,ballad
+等待戈多|窦唯|Dou Wei|Deng Dai Ge Duo|90s,ballad
+黑梦|窦唯|Dou Wei|Hei Meng|90s,upbeat
+钟鼓楼|何勇|He Yong|Zhong Gu Lou|90s,upbeat
+垃圾场|何勇|He Yong|La Ji Chang|90s,upbeat
+小白船|朴树|Pu Shu|Xiao Bai Chuan|90s,ballad
+我去2000年|朴树|Pu Shu|Wo Qu 2000 Nian|90s,upbeat
+旅途|朴树|Pu Shu|Lu Tu|90s,ballad
+colorful days|朴树|Pu Shu|colorful days|90s,upbeat
+两只蝴蝶|庞龙|Pang Long|Liang Zhi Hu Die|2000s,upbeat
+家在东北|庞龙|Pang Long|Jia Zai Dong Bei|2000s,upbeat
+你是我的玫瑰花|庞龙|Pang Long|Ni Shi Wo De Mei Gui Hua|2000s,upbeat
+丁香花|唐磊|Tang Lei|Ding Xiang Hua|2000s,ballad
+秋天不回来|王强|Wang Qiang|Qiu Tian Bu Hui Lai|2000s,ballad
+求佛|誓言|Shi Yan|Qiu Fo|2000s,ballad
+春暖花开|那英|Na Ying|Chun Nuan Hua Kai|90s,upbeat
+干杯朋友|田震|Tian Zhen|Gan Bei Peng You|90s,upbeat
+执着|田震|Tian Zhen|Zhi Zhuo|90s,upbeat
+月牙泉|田震|Tian Zhen|Yue Ya Quan|90s,ballad
+壮志雄心|田震|Tian Zhen|Zhuang Zhi Xiong Xin|90s,upbeat
+睡在我上铺的兄弟|老狼|Lao Lang|Shui Zai Wo Shang Pu De Xiong Di|90s,ballad
+同桌的你|老狼|Lao Lang|Tong Zhuo De Ni|90s,ballad
+那些花儿|朴树|Pu Shu|Na Xie Hua Er|90s,ballad
+白桦林|朴树|Pu Shu|Bai Hua Lin|90s,ballad
+生如夏花|朴树|Pu Shu|Sheng Ru Xia Hua|90s,ballad
+平凡之路|朴树|Pu Shu|Ping Fan Zhi Lu|modern,ballad
+新长征路上的摇滚|崔健|Cui Jian|Xin Chang Zheng Lu Shang De Yao Gun|80s,upbeat
+一无所有|崔健|Cui Jian|Yi Wu Suo You|80s,upbeat
+花房姑娘|崔健|Cui Jian|Hua Fang Gu Niang|80s,upbeat
+假行僧|崔健|Cui Jian|Jia Xing Seng|80s,upbeat
+一块红布|崔健|Cui Jian|Yi Kuai Hong Bu|80s,upbeat
+送别|李叔同|Li Shutong|Song Bie|folk,ballad
+大约在冬季|齐秦|Chyi Chin|Da Yue Zai Dong Ji|90s,ballad
+外面的世界|齐秦|Chyi Chin|Wai Mian De Shi Jie|90s,ballad
+北方的狼|齐秦|Chyi Chin|Bei Fang De Lang|90s,upbeat
+往事随风|齐秦|Chyi Chin|Wang Shi Sui Feng|90s,ballad
+夜夜夜夜|齐秦|Chyi Chin|Ye Ye Ye Ye|90s,ballad
+雾里看花|那英|Na Ying|Wu Li Kan Hua|90s,ballad
+征服|那英|Na Ying|Zheng Fu|90s,upbeat
+白天不懂夜的黑|那英|Na Ying|Bai Tian Bu Dong Ye De Hei|90s,ballad
+默|那英|Na Ying|Mo|modern,ballad
+好大一棵树|田震|Tian Zhen|Hao Da Yi Ke Shu|90s,ballad
+野花|田震|Tian Zhen|Ye Hua|90s,ballad
+铁窗|田震|Tian Zhen|Tie Chuang|90s,ballad
+笑脸|谢东|Xie Dong|Xiao Lian|90s,upbeat
+九百九十九朵玫瑰|邰正宵|Samuel Tai|Jiu Bai Jiu Shi Jiu Duo Mei Gui|90s,ballad
+心要让你听见|邰正宵|Samuel Tai|Xin Yao Rang Ni Ting Jian|90s,ballad
+千纸鹤|邰正宵|Samuel Tai|Qian Zhi He|90s,ballad
+只能抱着你|邰正宵|Samuel Tai|Zhi Neng Bao Zhe Ni|90s,ballad
+说谎|温兆伦|Deric Wan|Shuo Huang|90s,ballad
+随缘|温兆伦|Deric Wan|Sui Yuan|90s,ballad
+真心真意过一生|叶倩文|Sally Yeh|Zhen Xin Zhen Yi Guo Yi Sheng|90s,ballad
+潇洒走一回|叶倩文|Sally Yeh|Xiao Sa Zou Yi Hui|90s,upbeat
+祝福|叶倩文|Sally Yeh|Zhu Fu|90s,ballad
+我的爱对你说|叶倩文|Sally Yeh|Wo De Ai Dui Ni Shuo|90s,ballad
+情难枕|叶倩文|Sally Yeh|Qing Nan Zhen|90s,ballad
+让我欢喜让我忧|周华健|Wakin Chau|Rang Wo Huan Xi Rang Wo You|90s,ballad
+亲亲我的宝贝|周华健|Wakin Chau|Qin Qin Wo De Bao Bei|90s,ballad
+我是真的付出我的爱|周华健|Wakin Chau|Wo Shi Zhen De Fu Chu Wo De Ai|90s,ballad
+明天我要嫁给你|周华健|Wakin Chau|Ming Tian Wo Yao Jia Gei Ni|90s,upbeat
+爱相随|周华健|Wakin Chau|Ai Xiang Sui|90s,ballad
+风雨无阻|周华健|Wakin Chau|Feng Yu Wu Zu|90s,upbeat
+大地|Beyond|Beyond|Da Di|90s,upbeat
+冷雨夜|Beyond|Beyond|Leng Yu Ye|80s,ballad
+农民|Beyond|Beyond|Nong Min|90s,upbeat
+谁伴我闯荡|Beyond|Beyond|Shui Ban Wo Chuang Dang|90s,upbeat
+岁月无声|Beyond|Beyond|Sui Yue Wu Sheng|90s,ballad
+祝你愉快|陈奕迅|Eason Chan|Zhu Ni Yu Kuai|2000s,upbeat
+爱情转移|陈奕迅|Eason Chan|Ai Qing Zhuan Yi|2000s,ballad
+十年|陈奕迅|Eason Chan|Shi Nian|2000s,ballad
+K歌之王|陈奕迅|Eason Chan|K Ge Zhi Wang|2000s,ballad
+浮夸|陈奕迅|Eason Chan|Fu Kua|2000s,upbeat
+好久不见|陈奕迅|Eason Chan|Hao Jiu Bu Jian|2000s,ballad
+淘汰|陈奕迅|Eason Chan|Tao Tai|2000s,ballad
+红玫瑰|陈奕迅|Eason Chan|Hong Mei Gui|2000s,ballad
+白玫瑰|陈奕迅|Eason Chan|Bai Mei Gui|2000s,ballad
+孤勇者|陈奕迅|Eason Chan|Gu Yong Zhe|modern,upbeat
+明年今日|陈奕迅|Eason Chan|Ming Nian Jin Ri|2000s,ballad
+最佳损友|陈奕迅|Eason Chan|Zui Jia Sun You|2000s,upbeat
+人来人往|陈奕迅|Eason Chan|Ren Lai Ren Wang|2000s,ballad
+富士山下|陈奕迅|Eason Chan|Fu Shi Shan Xia|2000s,ballad
+不要说话|陈奕迅|Eason Chan|Bu Yao Shuo Hua|2000s,ballad
+单车|陈奕迅|Eason Chan|Dan Che|2000s,ballad
+`;
+
+let songsData = [];
+let currentView = 'category';
+let currentFilter = 'all';
+let currentArtist = null;
+let filteredSongs = [];
+let artistMap = new Map();
+let categories = {};
+
+function parseSongs() {
+    songsData = SONGS_DATA.trim().split('\n').map(line => {
+        const [title, artist, english, pinyin, cats] = line.split('|');
+        return {
+            title, artist, english, pinyin,
+            category: cats.split(','),
+            ytUrl: `https://www.youtube.com/results?search_query=${encodeURIComponent(title + ' ' + artist + ' karaoke')}`
+        };
+    });
+
+    songsData.forEach(song => {
+        const count = artistMap.get(song.artist) || { name: song.artist, english: song.english, count: 0 };
+        count.count++;
+        artistMap.set(song.artist, count);
+
+        song.category.forEach(cat => {
+            if (!categories[cat]) categories[cat] = 0;
+            categories[cat]++;
+        });
+    });
+
+    filteredSongs = [...songsData];
+    updateStats();
+    renderCategoryTabs();
+    renderSongs();
+}
+
+function updateStats() {
+    const stats = `📊 ${songsData.length.toLocaleString()} 首歌曲 Songs • ${artistMap.size} 位歌手 Artists`;
+    document.getElementById('statsBar').textContent = stats;
+}
+
+function renderCategoryTabs() {
+    const categoryNames = {
+        '50s': '五十年代 50s', '60s': '六十年代 60s', '70s': '七十年代 70s', 
+        '80s': '八十年代 80s', '90s': '九十年代 90s', '2000s': '2000年代 2000s',
+        'modern': '现代流行 Modern', 'ballad': '抒情歌 Ballads', 'upbeat': '欢快歌 Upbeat',
+        'revolutionary': '革命歌曲 Revolutionary', 'folk': '民歌 Folk'
+    };
+
+    const tabs = ['all', ...Object.keys(categoryNames)];
+    const tabsHtml = tabs.map(cat => {
+        const label = cat === 'all' ? '全部歌曲 All' : categoryNames[cat];
+        const count = cat === 'all' ? songsData.length : (categories[cat] || 0);
+        return `<button class="tab ${cat === 'all' ? 'active' : ''}" onclick="filterCategory('${cat}')">${label} (${count})</button>`;
+    }).join('');
+    
+    document.getElementById('categoryTabs').innerHTML = tabsHtml;
+}
+
+function switchView(view) {
+    currentView = view;
+    document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    document.getElementById('categoryFilters').classList.toggle('active', view === 'category');
+    document.getElementById('artistFilters').classList.toggle('active', view === 'artist');
+    
+    if (view === 'artist') {
+        renderArtists();
+    } else if (view === 'all') {
+        showAllSongs();
+    } else {
+        currentArtist = null;
+        filterCategory('all');
+    }
+}
+
+function renderArtists() {
+    const artists = Array.from(artistMap.values()).sort((a, b) => b.count - a.count);
+    const grid = document.getElementById('artistGrid');
+    grid.innerHTML = artists.map(a => `
+        <div class="artist-card" onclick="selectArtist('${a.name.replace(/'/g, "\\'")}')">
+            <div class="artist-name">${a.name}</div>
+            <div class="artist-english">${a.english}</div>
+            <div class="artist-count">${a.count} 首歌</div>
+        </div>
+    `).join('');
+    
+    document.getElementById('categoryTitle').textContent = '选择歌手 Select Artist';
+    document.getElementById('songsGrid').innerHTML = '';
+    document.getElementById('backBtn').style.display = 'none';
+}
+
+function selectArtist(artistName) {
+    currentArtist = artistName;
+    filteredSongs = songsData.filter(s => s.artist === artistName);
+    const artistData = artistMap.get(artistName);
+    document.getElementById('categoryTitle').innerHTML = `${artistName} <span style="color:#6b7280;font-size:1.3rem;font-weight:500;">${artistData.english}</span> <span style="color:#0075C4;font-size:1.2rem;">(${filteredSongs.length} 首)</span>`;
+    document.getElementById('backBtn').style.display = 'block';
+    renderSongs();
+}
+
+function filterCategory(category) {
+    currentFilter = category;
+    currentArtist = null;
+    
+    document.querySelectorAll('#categoryTabs .tab').forEach(tab => tab.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    if (category === 'all') {
+        filteredSongs = [...songsData];
+    } else {
+        filteredSongs = songsData.filter(song => song.category.includes(category));
+    }
+    
+    const categoryNames = {
+        'all': '全部歌曲 All Songs', '50s': '五十年代 50s', '60s': '六十年代 60s', 
+        '70s': '七十年代 70s', '80s': '八十年代 80s', '90s': '九十年代 90s', 
+        '2000s': '2000年代 2000s', 'modern': '现代流行 Modern', 'ballad': '抒情歌 Ballads', 
+        'upbeat': '欢快歌 Upbeat', 'revolutionary': '革命歌曲 Revolutionary', 'folk': '民歌 Folk'
+    };
+    
+    document.getElementById('categoryTitle').textContent = `${categoryNames[category]} (${filteredSongs.length})`;
+    document.getElementById('backBtn').style.display = 'none';
+    renderSongs();
+}
+
+function showAllSongs() {
+    filteredSongs = [...songsData];
+    document.getElementById('categoryTitle').textContent = `全部歌曲 All Songs (${filteredSongs.length})`;
+    document.getElementById('backBtn').style.display = 'none';
+    renderSongs();
+}
+
+function handleSearch() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    
+    if (searchTerm === '') {
+        if (currentArtist) {
+            selectArtist(currentArtist);
+        } else if (currentView === 'all') {
+            showAllSongs();
+        } else {
+            filterCategory(currentFilter);
+        }
+        return;
+    }
+    
+    let baseFilter = currentArtist ? 
+        songsData.filter(s => s.artist === currentArtist) :
+        currentFilter === 'all' ? songsData :
+        songsData.filter(s => s.category.includes(currentFilter));
+    
+    filteredSongs = baseFilter.filter(song => {
+        return song.title.toLowerCase().includes(searchTerm) ||
+               song.artist.toLowerCase().includes(searchTerm) ||
+               song.english.toLowerCase().includes(searchTerm) ||
+               song.pinyin.toLowerCase().includes(searchTerm);
+    });
+    
+    document.getElementById('categoryTitle').textContent = `🔍 搜索结果 Search Results (${filteredSongs.length})`;
+    renderSongs();
+}
+
+function renderSongs() {
+    const grid = document.getElementById('songsGrid');
+    const noResults = document.getElementById('noResults');
+    
+    if (filteredSongs.length === 0) {
+        grid.style.display = 'none';
+        noResults.style.display = 'block';
+        return;
+    }
+    
+    grid.style.display = 'grid';
+    noResults.style.display = 'none';
+    
+    grid.innerHTML = filteredSongs.map(song => `
+        <div class="song-card">
+            <div class="song-title">${song.title}</div>
+            <div class="song-artist">${song.artist} ${song.english}</div>
+            <div class="song-pinyin">${song.pinyin}</div>
+            <a href="${song.ytUrl}" target="_blank" class="btn-link">
+                ▶️ YouTube 卡拉OK
+            </a>
+        </div>
+    `).join('');
+}
+
+function goBack() {
+    if (currentView === 'artist') {
+        renderArtists();
+    } else {
+        filterCategory(currentFilter);
+    }
+}
+
+parseSongs();
+</script>
+</body>
+</html>
